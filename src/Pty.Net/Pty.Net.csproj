@@ -3,5 +3,23 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <None Include="$(WinptyReleasePath)\Win32\winpty.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x86\</PackagePath>
+    </None>
+    <None Include="$(WinptyReleasePath)\Win32\winpty-agent.exe">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x86\</PackagePath>
+    </None>
+    <None Include="$(WinptyReleasePath)\x64\winpty.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\</PackagePath>
+    </None>
+    <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe">
+      <Pack>true</Pack>
+      <PackagePath>runtimes\win-x64\</PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
