@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+    <NoWarn>CS1591;SA1600</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pty.Net\Pty.Net.csproj" />
   </ItemGroup>
 
 </Project>
