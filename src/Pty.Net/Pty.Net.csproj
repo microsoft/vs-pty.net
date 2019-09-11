@@ -16,10 +16,12 @@
     <None Include="$(WinptyReleasePath)\x64\winpty.dll">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x64\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x64\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>
