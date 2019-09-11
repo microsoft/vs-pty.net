@@ -11,6 +11,15 @@ namespace Pty.Net.Windows
     /// </summary>
     internal class WinptyLpwstrMarshaler : ICustomMarshaler
     {
+        private static ICustomMarshaler instance = new WinptyLpwstrMarshaler();
+
+        /// <summary>
+        /// Required method on <see cref="ICustomMarshaler"/> on order to work with native methods.
+        /// </summary>
+        /// <param name="cookie">passed in cookie token.</param>
+        /// <returns>The static instance of this <see cref="WinptyLpwstrMarshaler"/>.</returns>
+        public static ICustomMarshaler GetInstance(string cookie) => instance;
+
         /// <inheritdoc/>
         public object MarshalNativeToManaged(IntPtr pNativeData) => Marshal.PtrToStringUni(pNativeData);
 
