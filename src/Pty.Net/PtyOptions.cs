@@ -48,6 +48,11 @@ namespace Pty.Net
         public bool VerbatimCommandLine { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether WinPty should be forced as the windows backend even on systems where ConPty is available.
+        /// </summary>
+        public bool ForceWinPty { get; set; }
+
+        /// <summary>
         /// Gets or sets the process' environment variables.
         /// </summary>
         public Dictionary<string, string> Environment { get; set; }

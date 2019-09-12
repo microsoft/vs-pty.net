@@ -29,7 +29,7 @@ namespace Pty.Net.Windows
             TraceSource trace,
             CancellationToken cancellationToken)
         {
-            if (NativeMethods.IsPseudoConsoleSupported)
+            if (NativeMethods.IsPseudoConsoleSupported && !options.ForceWinPty)
             {
                 return this.StartPseudoConsoleAsync(options, environment, trace, cancellationToken);
             }
