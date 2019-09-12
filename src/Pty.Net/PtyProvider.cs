@@ -19,6 +19,10 @@ namespace Pty.Net
 
         private static readonly Lazy<IPtyProvider> WindowsProviderLazy = new Lazy<IPtyProvider>(() => new Windows.PtyProvider());
 
+        private static readonly Lazy<IPtyProvider> LinuxProviderLazy = new Lazy<IPtyProvider>(() => new Linux.PtyProvider());
+
+        private static readonly Lazy<IPtyProvider> MacProviderLazy = new Lazy<IPtyProvider>(() => new Mac.PtyProvider());
+
         private static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
         private static bool IsMac => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
@@ -43,8 +47,16 @@ namespace Pty.Net
             {
                 return WindowsProviderLazy.Value.StartTerminalAsync(options, environment, Trace, cancellationToken);
             }
+            else if (IsLinux)
+            {
+                return LinuxProviderLazy.Value.StartTerminalAsync(options, environment, Trace, cancellationToken);
+            }
+            else if (IsMac)
+            {
+                return MacProviderLazy.Value.StartTerminalAsync(options, environment, Trace, cancellationToken);
+            }
 
-            throw new NotImplementedException();
+            throw new PlatformNotSupportedException();
         }
     }
 }
