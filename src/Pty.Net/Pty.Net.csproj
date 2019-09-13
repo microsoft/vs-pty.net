@@ -7,20 +7,20 @@
   <ItemGroup>
     <None Include="$(WinptyReleasePath)\Win32\winpty.dll">
       <Pack>true</Pack>
-      <PackagePath>runtimes\win-x86\</PackagePath>
+      <PackagePath>runtimes\win-x86\native\</PackagePath>
     </None>
     <None Include="$(WinptyReleasePath)\Win32\winpty-agent.exe">
       <Pack>true</Pack>
-      <PackagePath>runtimes\win-x86\</PackagePath>
+      <PackagePath>runtimes\win-x86\native\</PackagePath>
     </None>
     <None Include="$(WinptyReleasePath)\x64\winpty.dll">
       <Pack>true</Pack>
-      <PackagePath>runtimes\win-x64\</PackagePath>
+      <PackagePath>runtimes\win-x64\native\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe">
       <Pack>true</Pack>
-      <PackagePath>runtimes\win-x64\</PackagePath>
+      <PackagePath>runtimes\win-x64\native\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
