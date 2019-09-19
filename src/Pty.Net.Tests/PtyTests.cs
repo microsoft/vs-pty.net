@@ -43,7 +43,7 @@ namespace Pty.Net.Tests
                 },
             };
 
-            IPtyConnection terminal = await PtyProvider.SpawnAsync(options, null, this.TimeoutToken);
+            IPtyConnection terminal = await PtyProvider.SpawnAsync(options, this.TimeoutToken);
 
             var processExitedTcs = new TaskCompletionSource<uint>();
             terminal.ProcessExited += (sender, e) => processExitedTcs.TrySetResult((uint)terminal.ExitCode);

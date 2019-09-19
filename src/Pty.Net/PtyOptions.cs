@@ -55,6 +55,6 @@ namespace Pty.Net
         /// <summary>
         /// Gets or sets the process' environment variables.
         /// </summary>
-        public Dictionary<string, string> Environment { get; set; }
+        public IDictionary<string, string> Environment { get; set; }
     }
 }

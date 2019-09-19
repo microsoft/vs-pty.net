@@ -17,7 +17,7 @@ namespace Pty.Net.Linux
     internal class PtyProvider : Unix.PtyProvider
     {
         /// <inheritdoc/>
-        public override Task<IPtyConnection> StartTerminalAsync(PtyOptions options, IDictionary<string, string> environment, TraceSource trace, CancellationToken cancellationToken)
+        public override Task<IPtyConnection> StartTerminalAsync(PtyOptions options, TraceSource trace, CancellationToken cancellationToken)
         {
             var winSize = new WinSize((ushort)options.Rows, (ushort)options.Cols);
 
@@ -64,7 +64,7 @@ namespace Pty.Net.Linux
                 // We are in a forked process! See http://man7.org/linux/man-pages/man2/fork.2.html for details.
                 // Only our thread is running. We inherited open file descriptors and get a copy of the parent process memory.
                 Environment.CurrentDirectory = options.Cwd;
-                execvpe(options.App, terminalArgs, environment);
+                execvpe(options.App, terminalArgs, options.Environment);
 
                 // Unreachable code after execvpe()
             }

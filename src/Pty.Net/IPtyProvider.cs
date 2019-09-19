@@ -17,13 +17,11 @@ namespace Pty.Net
         /// Spawns a process as a pseudoterminal.
         /// </summary>
         /// <param name="options">The options for spawning the pty.</param>
-        /// <param name="environment">The environment variables that the spawned process should have.</param>
         /// <param name="trace">The tracer to trace execution with.</param>
         /// <param name="cancellationToken">A token to cancel the task early.</param>
         /// <returns>A <see cref="Task"/> that completes once the process has spawned.</returns>
         Task<IPtyConnection> StartTerminalAsync(
             PtyOptions options,
-            IDictionary<string, string> environment,
             TraceSource trace,
             CancellationToken cancellationToken);
     }

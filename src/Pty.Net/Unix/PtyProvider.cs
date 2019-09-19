@@ -15,7 +15,7 @@ namespace Pty.Net.Unix
     internal abstract class PtyProvider : IPtyProvider
     {
         /// <inheritdoc/>
-        public abstract Task<IPtyConnection> StartTerminalAsync(PtyOptions options, IDictionary<string, string> environment, TraceSource trace, CancellationToken cancellationToken);
+        public abstract Task<IPtyConnection> StartTerminalAsync(PtyOptions options, TraceSource trace, CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets the arguments to pass to execvp.

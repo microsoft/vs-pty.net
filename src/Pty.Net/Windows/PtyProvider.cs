@@ -25,17 +25,16 @@ namespace Pty.Net.Windows
         /// <inheritdoc/>
         public Task<IPtyConnection> StartTerminalAsync(
             PtyOptions options,
-            IDictionary<string, string> environment,
             TraceSource trace,
             CancellationToken cancellationToken)
         {
             if (NativeMethods.IsPseudoConsoleSupported && !options.ForceWinPty)
             {
-                return this.StartPseudoConsoleAsync(options, environment, trace, cancellationToken);
+                return this.StartPseudoConsoleAsync(options, trace, cancellationToken);
             }
             else
             {
-                return this.StartWinPtyTerminalAsync(options, environment, trace, cancellationToken);
+                return this.StartWinPtyTerminalAsync(options, trace, cancellationToken);
             }
         }
 
@@ -86,7 +85,7 @@ namespace Pty.Net.Windows
             return pipe;
         }
 
-        private static string GetAppOnPath(string app, string cwd, Dictionary<string, string> env)
+        private static string GetAppOnPath(string app, string cwd, IDictionary<string, string> env)
         {
             if (string.IsNullOrWhiteSpace(app))
             {
@@ -252,7 +251,6 @@ namespace Pty.Net.Windows
 
         private async Task<IPtyConnection> StartWinPtyTerminalAsync(
            PtyOptions options,
-           IDictionary<string, string> environment,
            TraceSource trace,
            CancellationToken cancellationToken)
         {
@@ -272,7 +270,7 @@ namespace Pty.Net.Windows
                 WindowsArguments.FormatVerbatim(options.CommandLine) :
                 WindowsArguments.Format(options.CommandLine);
 
-            string env = GetEnvironmentString(environment);
+            string env = GetEnvironmentString(options.Environment);
             string app = GetAppOnPath(options.App, options.Cwd, options.Environment);
 
             trace.TraceInformation($"Starting terminal process '{app}' with command line {commandLine}");
@@ -325,7 +323,6 @@ namespace Pty.Net.Windows
 
         private Task<IPtyConnection> StartPseudoConsoleAsync(
            PtyOptions options,
-           IDictionary<string, string> environment,
            TraceSource trace,
            CancellationToken cancellationToken)
         {
@@ -370,7 +367,7 @@ namespace Pty.Net.Windows
             // Prepare the StartupInfoEx structure attached to the ConPTY.
             var startupInfo = default(STARTUPINFOEX);
             startupInfo.InitAttributeListAttachedToConPTY(pseudoConsoleHandle);
-            IntPtr lpEnvironment = Marshal.StringToHGlobalUni(GetEnvironmentString(environment));
+            IntPtr lpEnvironment = Marshal.StringToHGlobalUni(GetEnvironmentString(options.Environment));
             try
             {
                 string app = GetAppOnPath(options.App, options.Cwd, options.Environment);
