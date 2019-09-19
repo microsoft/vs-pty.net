@@ -1,0 +1,16 @@
+{
+    "version": "0.1-pre",
+    "publicReleaseRefSpec": [
+      "^refs/heads/master$"
+    ],
+    "cloudBuild": {
+      "setVersionVariables": true,
+      "buildNumber": {
+        "enabled": false,
+        "includeCommitId": {
+          "when": "nonPublicReleaseOnly",
+          "where": "buildMetadata"
+        }
+      }
+    }
+  }
