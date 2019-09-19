@@ -410,15 +410,15 @@ namespace Pty.Net.Windows
                 {
                     success = CreateProcess(
                         null,   // lpApplicationName
-                        commandLine,
+                        commandLine.ToString(),
                         null,   // lpProcessAttributes
                         null,   // lpThreadAttributes
                         false,  // bInheritHandles VERY IMPORTANT that this is false
                         EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT, // dwCreationFlags
                         lpEnvironment,
                         options.Cwd,
-                        startupInfo,
-                        processInfo);
+                        ref startupInfo,
+                        out processInfo);
 
                     if (!success)
                     {

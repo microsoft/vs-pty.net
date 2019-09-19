@@ -66,15 +66,15 @@ namespace Pty.Net.Windows
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool CreateProcess(
             string lpApplicationName,
-            StringBuilder lpCommandLine,                // LPTSTR - note: CreateProcess might insert a null somewhere in this string
+            string lpCommandLine,                // LPTSTR - note: CreateProcess might insert a null somewhere in this string
             SECURITY_ATTRIBUTES lpProcessAttributes,    // LPSECURITY_ATTRIBUTES
             SECURITY_ATTRIBUTES lpThreadAttributes,     // LPSECURITY_ATTRIBUTES
             bool bInheritHandles,                       // BOOL
             int dwCreationFlags,                        // DWORD
             IntPtr lpEnvironment,                       // LPVOID
             string lpCurrentDirectory,
-            STARTUPINFOEX lpStartupInfo,                // LPSTARTUPINFO
-            PROCESS_INFORMATION lpProcessInformation);  // LPPROCESS_INFORMATION
+            ref STARTUPINFOEX lpStartupInfo,                // LPSTARTUPINFO
+            out PROCESS_INFORMATION lpProcessInformation);  // LPPROCESS_INFORMATION
 
         [DllImport("kernel32.dll")]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
@@ -138,7 +138,7 @@ namespace Pty.Net.Windows
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        [StructLayout(LayoutKind.Sequential)]
         internal struct PROCESS_INFORMATION
         {
             public IntPtr hProcess;
@@ -215,7 +215,7 @@ namespace Pty.Net.Windows
         }
 
 #pragma warning disable SA1401 // Fields should be private
-        [StructLayout(LayoutKind.Sequential, Pack = 8)]
+        [StructLayout(LayoutKind.Sequential)]
         [DebuggerStepThrough]
         internal class SECURITY_ATTRIBUTES
         {
