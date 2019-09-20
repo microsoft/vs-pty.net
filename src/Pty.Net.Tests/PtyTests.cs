@@ -16,7 +16,7 @@ namespace Pty.Net.Tests
 
     public class PtyTests
     {
-        private static readonly int TestTimeoutMs = Debugger.IsAttached ? 1000_000_000 : 5_000;
+        private static readonly int TestTimeoutMs = Debugger.IsAttached ? 300_000 : 5_000;
 
         private CancellationToken TimeoutToken { get; } = new CancellationTokenSource(TestTimeoutMs).Token;
 
@@ -106,10 +106,12 @@ namespace Pty.Net.Tests
             {
                 byte[] commandBuffer = encoding.GetBytes("echo " + Data);
                 await terminal.WriterStream.WriteAsync(commandBuffer, 0, commandBuffer.Length, this.TimeoutToken);
+                await terminal.WriterStream.FlushAsync();
 
                 await firstDataFound.Task;
 
                 await terminal.WriterStream.WriteAsync(new byte[] { 0x0D }, 0, 1, this.TimeoutToken); // Enter
+                await terminal.WriterStream.FlushAsync();
 
                 Assert.True(await checkTerminalOutputAsync);
             }
@@ -129,7 +131,8 @@ namespace Pty.Net.Tests
                 uint exitCode = await processExitedTcs.Task;
                 Assert.True(
                     exitCode == CtrlCExitCode || // WinPty terminal exit code.
-                    exitCode == 1); // Pseudo Console exit code on Win 10.
+                    exitCode == 1 || // Pseudo Console exit code on Win 10.
+                    exitCode == 0); // pty exit code on *nix.
             }
 
             Assert.True(terminal.WaitForExit(TestTimeoutMs));

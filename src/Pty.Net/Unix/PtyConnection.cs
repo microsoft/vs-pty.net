@@ -35,7 +35,6 @@ namespace Pty.Net.Unix
 
             this.master = master;
             this.pid = pid;
-
             var childWatcherThread = new Thread(this.ChildWatcherThreadProc)
             {
                 IsBackground = true,
@@ -64,7 +63,9 @@ namespace Pty.Net.Unix
         /// <inheritdoc/>
         public void Dispose()
         {
-            throw new NotImplementedException();
+            this.ReaderStream?.Dispose();
+            this.WriterStream?.Dispose();
+            this.Kill();
         }
 
         /// <inheritdoc/>
@@ -117,6 +118,7 @@ namespace Pty.Net.Unix
 
         private void ChildWatcherThreadProc()
         {
+            Console.WriteLine($"Waiting on {this.pid}");
             const int SignalMask = 127;
             const int ExitCodeMask = 255;
 
@@ -124,6 +126,7 @@ namespace Pty.Net.Unix
             if (!this.WaitPid(this.pid, ref status))
             {
                 int errno = Marshal.GetLastWin32Error();
+                Console.WriteLine($"Wait failed with {errno}");
                 if (errno == EINTR)
                 {
                     this.ChildWatcherThreadProc();
@@ -141,9 +144,11 @@ namespace Pty.Net.Unix
                 return;
             }
 
+            Console.WriteLine($"Wait succeeded");
             this.exitSignal = status & SignalMask;
             this.exitCode = this.exitSignal == 0 ? (status >> 8) & ExitCodeMask : 0;
             this.terminalProcessTerminatedEvent.Set();
+            this.ProcessExited?.Invoke(this, EventArgs.Empty);
         }
     }
 }

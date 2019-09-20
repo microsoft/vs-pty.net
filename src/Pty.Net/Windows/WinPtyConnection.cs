@@ -56,6 +56,9 @@ namespace Pty.Net.Windows
         /// <inheritdoc/>
         public void Dispose()
         {
+            this.ReaderStream?.Dispose();
+            this.WriterStream?.Dispose();
+
             this.processHandle.Close();
             winpty_free(this.handle);
         }

@@ -5,20 +5,20 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Include="$(WinptyReleasePath)\Win32\winpty.dll">
+    <None Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x86\native\</PackagePath>
     </None>
-    <None Include="$(WinptyReleasePath)\Win32\winpty-agent.exe">
+    <None Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x86\native\</PackagePath>
     </None>
-    <None Include="$(WinptyReleasePath)\x64\winpty.dll">
+    <None Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x64\native\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe">
+    <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
       <Pack>true</Pack>
       <PackagePath>runtimes\win-x64\native\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

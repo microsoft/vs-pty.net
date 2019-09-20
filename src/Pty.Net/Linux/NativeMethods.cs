@@ -106,6 +106,9 @@ namespace Pty.Net.Linux
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int ioctl(int fd, ulong request, ref WinSize winSize);
 
+        [DllImport(LibSystem, SetLastError = true)]
+        internal static extern int kill(int pid, int signal);
+
         [DllImport("System.Native", EntryPoint = "SystemNative_GetEnviron", SetLastError = true)]
         internal static extern IntPtr GetEnviron();
 

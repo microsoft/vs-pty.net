@@ -200,6 +200,9 @@ namespace Pty.Net.Mac
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int ioctl(int fd, ulong request, ref WinSize winSize);
 
+        [DllImport(LibSystem, SetLastError = true)]
+        internal static extern int kill(int pid, int signal);
+
         internal static void execvpe(string file, string[] args, IDictionary<string, string> environment)
         {
             if (environment != null)

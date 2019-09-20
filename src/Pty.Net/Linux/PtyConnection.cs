@@ -22,9 +22,9 @@ namespace Pty.Net.Linux
         }
 
         /// <inheritdoc/>
-        protected override bool Kill(int fd)
+        protected override bool Kill(int master)
         {
-            return ioctl(fd, TIOCSIG, SIGHUP) != -1;
+            return kill(this.Pid, SIGHUP) != -1;
         }
 
         /// <inheritdoc/>

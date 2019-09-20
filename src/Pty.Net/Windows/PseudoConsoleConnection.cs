@@ -51,6 +51,9 @@ namespace Pty.Net.Windows
         /// <inheritdoc/>
         public void Dispose()
         {
+            this.ReaderStream?.Dispose();
+            this.WriterStream?.Dispose();
+
             if (this.handles != null)
             {
                 this.handles.PseudoConsoleHandle.Close();
