@@ -1,0 +1,34 @@
+jobs:
+- job: Windows
+  pool: Hosted Windows 2019 with VS2019
+  steps:
+  - checkout: self
+    submodules: true
+    clean: true
+  - template: install-dependencies.yml
+  - script: .\nbgv cloud -p src
+  - template: build-winpty.yml
+  - template: msbuild.yml
+  - template: publish.yml
+
+- job: Linux
+  pool:
+    vmImage: Ubuntu 16.04
+  steps:
+  - checkout: self
+    submodules: true
+    clean: true
+  - template: install-dependencies.yml
+  - template: dotnet.yml
+  - template: publish.yml
+
+- job: MacOS
+  pool:
+    vmImage: macOS 10.13
+  steps:
+  - checkout: self
+    submodules: true
+    clean: true
+  - template: install-dependencies.yml
+  - template: dotnet.yml
+  - template: publish.yml

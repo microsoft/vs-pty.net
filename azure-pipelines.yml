@@ -1,0 +1,17 @@
+trigger:
+  branches:
+    include:
+    - master
+    - v*
+  paths:
+    exclude:
+    - doc/
+    - '*.md'
+
+variables:
+  TreatWarningsAsErrors: true
+  BuildConfiguration: Release
+  BuildPlatform: Any CPU
+
+jobs:
+- template: azure-pipelines/build.yml

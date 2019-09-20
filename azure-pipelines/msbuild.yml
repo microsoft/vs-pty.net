@@ -1,0 +1,16 @@
+steps:
+- task: VSBuild@1
+  displayName: Build Visual Studio solution
+  inputs:
+    solution: 'src\**\*.sln'
+    msbuildArgs: /t:build,pack /m /bl:"$(Build.ArtifactStagingDirectory)/build_logs/msbuild.binlog"
+    platform: $(BuildPlatform)
+    configuration: $(BuildConfiguration)
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test -f net472
+  inputs:
+    command: test
+    arguments: --no-build -c $(BuildConfiguration) -f net472 -v n /p:CollectCoverage=true
+    testRunTitle: net472-$(Agent.JobName)
+    workingDirectory: src

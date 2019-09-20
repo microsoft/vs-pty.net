@@ -1,0 +1,12 @@
+steps:
+- script: dotnet build --no-restore -c $(BuildConfiguration) /v:m /bl:"$(Build.ArtifactStagingDirectory)/build_logs/build.binlog" -f netcoreapp2.2
+  displayName: dotnet build
+  workingDirectory: src
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test -f netcoreapp2.2
+  inputs:
+    command: test
+    arguments: --no-build -c $(BuildConfiguration) -f netcoreapp2.2 -v n /p:CollectCoverage=true
+    testRunTitle: netcoreapp2.2-$(Agent.JobName)
+    workingDirectory: src
