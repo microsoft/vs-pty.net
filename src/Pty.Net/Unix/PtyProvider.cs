@@ -22,15 +22,15 @@ namespace Pty.Net.Unix
         /// </summary>
         /// <param name="options">The options for spawning the pty.</param>
         /// <returns>An array of arguments to pass to execvp.</returns>
-        protected static string[] GetExecvpArgs(PtyOptions options)
+        protected static string?[] GetExecvpArgs(PtyOptions options)
         {
             // execvp(2) args array must end with null. The first arg is the app itself.
-            if (options.CommandLine == null || options.CommandLine.Length == 0)
+            if (options.CommandLine.Length == 0)
             {
                 return new[] { options.App, null };
             }
 
-            var result = new string[options.CommandLine.Length + 2];
+            var result = new string?[options.CommandLine.Length + 2];
             Array.Copy(options.CommandLine, 0, result, 1, options.CommandLine.Length);
             result[0] = options.App;
             return result;

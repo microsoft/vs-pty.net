@@ -15,7 +15,7 @@ namespace Pty.Net.Windows
         /// </summary>
         /// <param name="args">The command line arguments to format.</param>
         /// <returns>a space-delimited list of command line arguments, each entry surrounded by quotes.</returns>
-        public static string Format(params string[] args) =>
+        public static string Format(params string[]? args) =>
             string.Join(" ", (args ?? Enumerable.Empty<string>()).Select(Format));
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Pty.Net.Windows
         /// </summary>
         /// <param name="args">The command line arguments to format.</param>
         /// <returns>A space-delimited list of command line arguments.</returns>
-        public static string FormatVerbatim(params string[] args) =>
+        public static string FormatVerbatim(params string[]? args) =>
             string.Join(" ", args ?? Enumerable.Empty<string>());
 
         private static string Format(string arg) =>

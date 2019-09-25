@@ -16,25 +16,25 @@ namespace Pty.Net
         private static readonly Lazy<IPtyProvider> LinuxProviderLazy = new Lazy<IPtyProvider>(() => new Linux.PtyProvider());
         private static readonly Lazy<IPtyProvider> MacProviderLazy = new Lazy<IPtyProvider>(() => new Mac.PtyProvider());
         private static readonly Lazy<IPtyProvider> PtyProviderLazy;
-        private static readonly IDictionary<string, string> WindowsPtyEnvironment = null;
+        private static readonly IDictionary<string, string> WindowsPtyEnvironment = new Dictionary<string, string>();
         private static readonly IDictionary<string, string> UnixPtyEnvironment = new Dictionary<string, string>(StringComparer.Ordinal)
         {
             { "TERM", "xterm-256color" },
 
                 // Make sure we didn't start our server from inside tmux.
-            { "TMUX", null },
-            { "TMUX_PANE", null },
+            { "TMUX", string.Empty },
+            { "TMUX_PANE", string.Empty },
 
                 // Make sure we didn't start our server from inside screen.
                 // http://web.mit.edu/gnu/doc/html/screen_20.html
-            { "STY", null },
-            { "WINDOW", null },
+            { "STY", string.Empty },
+            { "WINDOW", string.Empty },
 
                 // These variables that might confuse our terminal
-            { "WINDOWID", null },
-            { "TERMCAP", null },
-            { "COLUMNS", null },
-            { "LINES", null },
+            { "WINDOWID", string.Empty },
+            { "TERMCAP", string.Empty },
+            { "COLUMNS", string.Empty },
+            { "LINES", string.Empty },
         };
 
         static PlatformServices()

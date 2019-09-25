@@ -21,7 +21,7 @@ namespace Pty.Net.Linux
         {
             var winSize = new WinSize((ushort)options.Rows, (ushort)options.Cols);
 
-            string[] terminalArgs = GetExecvpArgs(options);
+            string?[] terminalArgs = GetExecvpArgs(options);
 
             var controlCharacters = new Dictionary<TermSpecialControlCharacter, sbyte>
             {

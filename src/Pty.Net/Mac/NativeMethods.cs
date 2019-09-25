@@ -187,7 +187,7 @@ namespace Pty.Net.Mac
 
         // pid_t forkpty(int * amaster, char * aworker, struct termios *, struct winsize *);
         [DllImport(LibSystem, SetLastError = true)]
-        internal static extern int forkpty(ref int master, StringBuilder name, ref Termios termp, ref WinSize winsize);
+        internal static extern int forkpty(ref int master, StringBuilder? name, ref Termios termp, ref WinSize winsize);
 
         // pid_t waitpid(pid_t, int *, int)
         [DllImport(LibSystem, SetLastError = true)]
@@ -203,7 +203,7 @@ namespace Pty.Net.Mac
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int kill(int pid, int signal);
 
-        internal static void execvpe(string file, string[] args, IDictionary<string, string> environment)
+        internal static void execvpe(string file, string?[] args, IDictionary<string, string> environment)
         {
             if (environment != null)
             {
@@ -239,7 +239,7 @@ namespace Pty.Net.Mac
         [DllImport(LibSystem, SetLastError = true)]
         private static extern int execvp(
             [MarshalAs(UnmanagedType.LPStr)] string file,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] args);
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[] args);
 
         // char ***_NSGetEnviron(void);
         [DllImport(LibSystem)]
@@ -285,11 +285,6 @@ namespace Pty.Net.Mac
                 TermSpeed speed,
                 IDictionary<TermSpecialControlCharacter, sbyte> controlCharacters)
             {
-                if (controlCharacters == null)
-                {
-                    throw new ArgumentNullException(nameof(controlCharacters));
-                }
-
                 this.IFlag = (IntPtr)inputFlag;
                 this.OFlag = (IntPtr)outputFlag;
                 this.CFlag = (IntPtr)controlFlag;

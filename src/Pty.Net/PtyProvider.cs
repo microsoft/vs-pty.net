@@ -28,6 +28,26 @@ namespace Pty.Net
             PtyOptions options,
             CancellationToken cancellationToken)
         {
+            if (string.IsNullOrEmpty(options.App))
+            {
+                throw new ArgumentNullException(nameof(options.App));
+            }
+
+            if (string.IsNullOrEmpty(options.Cwd))
+            {
+                throw new ArgumentNullException(nameof(options.Cwd));
+            }
+
+            if (options.CommandLine == null)
+            {
+                throw new ArgumentNullException(nameof(options.CommandLine));
+            }
+
+            if (options.Environment == null)
+            {
+                throw new ArgumentNullException(nameof(options.Environment));
+            }
+
             IDictionary<string, string> environment = MergeEnvironment(PlatformServices.PtyEnvironment, null);
             environment = MergeEnvironment(options.Environment, environment);
 
@@ -36,7 +56,7 @@ namespace Pty.Net
             return PlatformServices.PtyProvider.StartTerminalAsync(options, Trace, cancellationToken);
         }
 
-        private static IDictionary<string, string> MergeEnvironment(IDictionary<string, string> enviromentToMerge, IDictionary<string, string> environment)
+        private static IDictionary<string, string> MergeEnvironment(IDictionary<string, string> enviromentToMerge, IDictionary<string, string>? environment)
         {
             if (environment == null)
             {
@@ -45,11 +65,6 @@ namespace Pty.Net
                 {
                     environment[entry.Key.ToString()] = entry.Value.ToString();
                 }
-            }
-
-            if (enviromentToMerge == null)
-            {
-                return environment;
             }
 
             foreach (var kvp in enviromentToMerge)

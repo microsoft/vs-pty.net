@@ -3,6 +3,7 @@
 
 namespace Pty.Net
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -13,7 +14,7 @@ namespace Pty.Net
         /// <summary>
         /// Gets or sets the terminal name.
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Gets or sets the number of initial rows.
@@ -28,17 +29,17 @@ namespace Pty.Net
         /// <summary>
         /// Gets or sets the working directory for the spawned process.
         /// </summary>
-        public string Cwd { get; set; }
+        public string Cwd { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the path to the process to be spawned.
         /// </summary>
-        public string App { get; set; }
+        public string App { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the command line arguments to the process.
         /// </summary>
-        public string[] CommandLine { get; set; }
+        public string[] CommandLine { get; set; } = Array.Empty<string>();
 
         /// <summary>
         /// Gets or sets a value indicating whether command line arguments must be quoted.
@@ -55,6 +56,6 @@ namespace Pty.Net
         /// <summary>
         /// Gets or sets the process' environment variables.
         /// </summary>
-        public IDictionary<string, string> Environment { get; set; }
+        public IDictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
     }
 }

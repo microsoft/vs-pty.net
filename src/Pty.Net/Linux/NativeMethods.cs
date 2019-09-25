@@ -93,7 +93,7 @@ namespace Pty.Net.Linux
 
         // pid_t forkpty(int * amaster, char * aworker, struct termios *, struct winsize *);
         [DllImport("libutil.so.1", SetLastError = true)]
-        internal static extern int forkpty(ref int master, StringBuilder name, ref Termios termp, ref WinSize winsize);
+        internal static extern int forkpty(ref int master, StringBuilder? name, ref Termios termp, ref WinSize winsize);
 
         // pid_t waitpid(pid_t, int *, int)
         [DllImport(LibSystem, SetLastError = true)]
@@ -112,13 +112,8 @@ namespace Pty.Net.Linux
         [DllImport("System.Native", EntryPoint = "SystemNative_GetEnviron", SetLastError = true)]
         internal static extern IntPtr GetEnviron();
 
-        internal static void execvpe(string file, string[] args, IDictionary<string, string> environment)
+        internal static void execvpe(string file, string?[] args, IDictionary<string, string> environment)
         {
-            if (environment == null)
-            {
-                throw new ArgumentNullException(nameof(environment));
-            }
-
             // Set environment
             // As this process is going to be replaced by execvp, there is no need in freeing up the allocated memory.
             IntPtr ppEnv = GetEnviron();
@@ -147,7 +142,7 @@ namespace Pty.Net.Linux
         [DllImport(LibSystem, SetLastError = true)]
         private static extern int execvp(
             [MarshalAs(UnmanagedType.LPStr)] string file,
-            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] args);
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[] args);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct WinSize
@@ -191,11 +186,6 @@ namespace Pty.Net.Linux
                 TermSpeed speed,
                 IDictionary<TermSpecialControlCharacter, sbyte> controlCharacters)
             {
-                if (controlCharacters == null)
-                {
-                    throw new ArgumentNullException(nameof(controlCharacters));
-                }
-
                 this.IFlag = (uint)inputFlag;
                 this.OFlag = (uint)outputFlag;
                 this.CFlag = (uint)controlFlag;

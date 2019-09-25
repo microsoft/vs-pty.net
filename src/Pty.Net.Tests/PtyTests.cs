@@ -39,7 +39,7 @@ namespace Pty.Net.Tests
                 Environment = new Dictionary<string, string>()
                 {
                     { "FOO", "bar" },
-                    { "Bazz", null },
+                    { "Bazz", string.Empty },
                 },
             };
 
@@ -51,8 +51,8 @@ namespace Pty.Net.Tests
             string GetTerminalExitCode() =>
                 processExitedTcs.Task.IsCompleted ? $". Terminal process has exited with exit code {processExitedTcs.Task.GetAwaiter().GetResult()}." : string.Empty;
 
-            var firstOutput = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
-            var firstDataFound = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var firstOutput = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var firstDataFound = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
             var output = string.Empty;
             var checkTerminalOutputAsync = Task.Run(async () =>
             {

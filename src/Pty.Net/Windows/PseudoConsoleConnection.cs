@@ -63,7 +63,6 @@ namespace Pty.Net.Windows
                 this.handles.InPipePseudoConsoleSide.Close();
                 this.handles.OutPipePseudoConsoleSide.Close();
                 this.handles.OutPipeOurSide.Close();
-                this.handles = null;
             }
         }
 
@@ -100,56 +99,87 @@ namespace Pty.Net.Windows
         internal sealed class PseudoConsoleConnectionHandles
         {
             /// <summary>
-            /// Gets or sets the input pipe on the pseudoconsole side.
+            /// Initializes a new instance of the <see cref="PseudoConsoleConnectionHandles"/> class.
+            /// </summary>
+            /// <param name="inPipePseudoConsoleSide">the input pipe on the pseudoconsole side.</param>
+            /// <param name="outPipePseudoConsoleSide">the output pipe on the pseudoconsole side.</param>
+            /// <param name="inPipeOurSide"> the input pipe on the local side.</param>
+            /// <param name="outPipeOurSide"> the output pipe on the local side.</param>
+            /// <param name="pseudoConsoleHandle">the handle to the pseudoconsole.</param>
+            /// <param name="processHandle">the handle to the spawned process.</param>
+            /// <param name="pid">the process ID.</param>
+            /// <param name="mainThreadHandle">the handle to the main thread.</param>
+            public PseudoConsoleConnectionHandles(
+                SafePipeHandle inPipePseudoConsoleSide,
+                SafePipeHandle outPipePseudoConsoleSide,
+                SafePipeHandle inPipeOurSide,
+                SafePipeHandle outPipeOurSide,
+                SafePseudoConsoleHandle pseudoConsoleHandle,
+                SafeProcessHandle processHandle,
+                int pid,
+                SafeThreadHandle mainThreadHandle)
+            {
+                this.InPipePseudoConsoleSide = inPipePseudoConsoleSide;
+                this.OutPipePseudoConsoleSide = outPipePseudoConsoleSide;
+                this.InPipeOurSide = inPipeOurSide;
+                this.OutPipeOurSide = outPipeOurSide;
+                this.PseudoConsoleHandle = pseudoConsoleHandle;
+                this.ProcessHandle = processHandle;
+                this.Pid = pid;
+                this.MainThreadHandle = mainThreadHandle;
+            }
+
+            /// <summary>
+            /// Gets the input pipe on the pseudoconsole side.
             /// </summary>
             /// <remarks>
             /// This pipe is connected to <see cref="OutPipeOurSide"/>.
             /// </remarks>
-            internal SafePipeHandle InPipePseudoConsoleSide { get; set; }
+            internal SafePipeHandle InPipePseudoConsoleSide { get; }
 
             /// <summary>
-            /// Gets or sets the output pipe on the pseudoconsole side.
+            /// Gets the output pipe on the pseudoconsole side.
             /// </summary>
             /// <remarks>
             /// This pipe is connected to <see cref="InPipeOurSide"/>.
             /// </remarks>
-            internal SafePipeHandle OutPipePseudoConsoleSide { get; set; }
+            internal SafePipeHandle OutPipePseudoConsoleSide { get; }
 
             /// <summary>
-            /// Gets or sets the input pipe on the local side.
+            /// Gets the input pipe on the local side.
             /// </summary>
             /// <remarks>
             /// This pipe is connected to <see cref="OutPipePseudoConsoleSide"/>.
             /// </remarks>
-            internal SafePipeHandle InPipeOurSide { get; set; }
+            internal SafePipeHandle InPipeOurSide { get; }
 
             /// <summary>
-            /// Gets or sets the output pipe on the local side.
+            /// Gets the output pipe on the local side.
             /// </summary>
             /// <remarks>
             /// This pipe is connected to <see cref="InPipePseudoConsoleSide"/>.
             /// </remarks>
-            internal SafePipeHandle OutPipeOurSide { get; set; }
+            internal SafePipeHandle OutPipeOurSide { get; }
 
             /// <summary>
-            /// Gets or sets the handle to the pseudoconsole.
+            /// Gets the handle to the pseudoconsole.
             /// </summary>
-            internal SafePseudoConsoleHandle PseudoConsoleHandle { get; set; }
+            internal SafePseudoConsoleHandle PseudoConsoleHandle { get; }
 
             /// <summary>
-            /// Gets or sets the handle to the spawned process.
+            /// Gets the handle to the spawned process.
             /// </summary>
-            internal SafeProcessHandle ProcessHandle { get; set; }
+            internal SafeProcessHandle ProcessHandle { get; }
 
             /// <summary>
-            /// Gets or sets the process ID.
+            /// Gets the process ID.
             /// </summary>
-            internal int Pid { get; set; }
+            internal int Pid { get; }
 
             /// <summary>
-            /// Gets or sets the handle to the main thread.
+            /// Gets the handle to the main thread.
             /// </summary>
-            internal SafeThreadHandle MainThreadHandle { get; set; }
+            internal SafeThreadHandle MainThreadHandle { get; }
         }
     }
 }

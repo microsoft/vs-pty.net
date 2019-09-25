@@ -87,16 +87,6 @@ namespace Pty.Net.Windows
 
         private static string GetAppOnPath(string app, string cwd, IDictionary<string, string> env)
         {
-            if (string.IsNullOrWhiteSpace(app))
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
-
-            if (string.IsNullOrWhiteSpace(cwd))
-            {
-                throw new ArgumentNullException(nameof(cwd));
-            }
-
             bool isWow64 = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432") != null;
             var windir = Environment.GetEnvironmentVariable("WINDIR");
             var sysnativePath = Path.Combine(windir, "Sysnative");
@@ -218,11 +208,6 @@ namespace Pty.Net.Windows
 
         private static string GetEnvironmentString(IDictionary<string, string> environment)
         {
-            if (environment == null)
-            {
-                return null;
-            }
-
             string[] keys = new string[environment.Count];
             environment.Keys.CopyTo(keys, 0);
 
@@ -303,8 +288,8 @@ namespace Pty.Net.Windows
                 ThrowIfError("Unable to start WinPTY terminal process", error, alwaysThrow: true);
             }
 
-            Stream writeToStream = null;
-            Stream readFromStream = null;
+            Stream? writeToStream = null;
+            Stream? readFromStream = null;
             try
             {
                 writeToStream = await CreatePipeAsync(winpty_conin_name(handle), PipeDirection.Out, cancellationToken);
@@ -440,17 +425,15 @@ namespace Pty.Net.Windows
                     throw new InvalidOperationException($"Could not start terminal process {commandLine.ToString()}: {exception.Message}", exception);
                 }
 
-                var connectionOptions = new PseudoConsoleConnection.PseudoConsoleConnectionHandles
-                {
-                    InPipePseudoConsoleSide = inPipePseudoConsoleSide,
-                    OutPipePseudoConsoleSide = outPipePseudoConsoleSide,
-                    InPipeOurSide = inPipeOurSide,
-                    OutPipeOurSide = outPipeOurSide,
-                    PseudoConsoleHandle = pseudoConsoleHandle,
-                    Pid = processInfo.dwProcessId,
-                    ProcessHandle = processHandle,
-                    MainThreadHandle = mainThreadHandle,
-                };
+                var connectionOptions = new PseudoConsoleConnection.PseudoConsoleConnectionHandles(
+                    inPipePseudoConsoleSide,
+                    outPipePseudoConsoleSide,
+                    inPipeOurSide,
+                    outPipeOurSide,
+                    pseudoConsoleHandle,
+                    processHandle,
+                    processInfo.dwProcessId,
+                    mainThreadHandle);
 
                 var result = new PseudoConsoleConnection(connectionOptions);
                 return Task.FromResult<IPtyConnection>(result);

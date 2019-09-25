@@ -65,10 +65,10 @@ namespace Pty.Net.Windows
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern bool CreateProcess(
-            string lpApplicationName,
+            string? lpApplicationName,
             string lpCommandLine,                // LPTSTR - note: CreateProcess might insert a null somewhere in this string
-            SECURITY_ATTRIBUTES lpProcessAttributes,    // LPSECURITY_ATTRIBUTES
-            SECURITY_ATTRIBUTES lpThreadAttributes,     // LPSECURITY_ATTRIBUTES
+            SECURITY_ATTRIBUTES? lpProcessAttributes,    // LPSECURITY_ATTRIBUTES
+            SECURITY_ATTRIBUTES? lpThreadAttributes,     // LPSECURITY_ATTRIBUTES
             bool bInheritHandles,                       // BOOL
             int dwCreationFlags,                        // DWORD
             IntPtr lpEnvironment,                       // LPVOID
@@ -93,7 +93,7 @@ namespace Pty.Net.Windows
         internal static extern bool CreatePipe(
             out SafePipeHandle hReadPipe,           // PHANDLE hReadPipe,                       // read handle
             out SafePipeHandle hWritePipe,          // PHANDLE hWritePipe,                      // write handle
-            SECURITY_ATTRIBUTES pipeAttributes,     // LPSECURITY_ATTRIBUTES lpPipeAttributes,  // security attributes
+            SECURITY_ATTRIBUTES? pipeAttributes,    // LPSECURITY_ATTRIBUTES lpPipeAttributes,  // security attributes
             int size);                              // DWORD nSize                              // pipe size
 
         [DllImport("kernel32.dll", SetLastError = true)]
