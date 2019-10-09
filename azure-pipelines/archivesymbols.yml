@@ -1,0 +1,8 @@
+steps:
+- task: PublishSymbols@2
+  inputs:
+    SearchPattern: '**/bin/**/*.pdb'
+    IndexSources: false
+    SymbolServerType: 'TeamServices'
+  displayName: Archive symbols to VSTS
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 

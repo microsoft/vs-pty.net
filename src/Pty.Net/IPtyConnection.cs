@@ -14,7 +14,7 @@ namespace Pty.Net
         /// <summary>
         /// Event fired when the pty process exits.
         /// </summary>
-        event EventHandler ProcessExited;
+        event EventHandler? ProcessExited;
 
         /// <summary>
         /// Gets the stream for reading data from the pty.

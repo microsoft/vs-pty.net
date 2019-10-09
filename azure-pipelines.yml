@@ -14,4 +14,4 @@ variables:
   BuildPlatform: Any CPU
 
 jobs:
-- template: azure-pipelines/build.yml
+  - template: azure-pipelines/build.yml

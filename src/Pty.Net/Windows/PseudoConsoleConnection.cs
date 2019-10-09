@@ -34,7 +34,7 @@ namespace Pty.Net.Windows
         }
 
         /// <inheritdoc/>
-        public event EventHandler ProcessExited;
+        public event EventHandler? ProcessExited;
 
         /// <inheritdoc/>
         public Stream ReaderStream { get; }
