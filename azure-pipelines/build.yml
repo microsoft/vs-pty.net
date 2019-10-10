@@ -22,7 +22,6 @@ jobs:
   - template: install-dependencies.yml
   - template: dotnet.yml
   - template: publish.yml
-  - template: archivesymbols.yml
 
 - job: MacOS
   pool:
@@ -34,4 +33,3 @@ jobs:
   - template: install-dependencies.yml
   - template: dotnet.yml
   - template: publish.yml
-  - template: archivesymbols.yml
