@@ -3,25 +3,48 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netcoreapp2.2</TargetFrameworks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <OutputWinPtyFiles Include="$(OutputPath)\winpty\**\*" />
+    <None Include="@(OutputWinPtyFiles)">
+      <Pack>true</Pack>
+      <PackagePath>%(OutputWinPtyFiles.RecursiveDir)</PackagePath>
+    </None>
+  </ItemGroup>
   
   <ItemGroup>
-    <None Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\win-x86\native\</PackagePath>
-    </None>
-    <None Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\win-x86\native\</PackagePath>
-    </None>
-    <None Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\win-x64\native\</PackagePath>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-      <Pack>true</Pack>
-      <PackagePath>runtimes\win-x64\native\</PackagePath>
+    <None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>runtimes\win-x86\native\</PackagePath>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>runtimes\win-x86\native\</PackagePath>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>runtimes\win-x64\native\</PackagePath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>runtimes\win-x64\native\</PackagePath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </WinPtyFiles>
+    </ItemGroup>
+    <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(BaseOutputPath)\$(Configuration)\winpty\%(WinPtyFiles.PackagePath)" />
+  </Target>
+  
+  <Target Name="SetupFilesToSign" BeforeTargets="CollectFilesToSign">
+    <!--The publish step below pulls from the intermediate output path so we need to sign the intermediate assembly instead of the target path assembly so publish gets the signed version of the file-->
+    <ItemGroup>
+      <FilesToSign Include="$(OutputPath)\winpty\**\*">
+        <Authenticode>3PartySHA2</Authenticode>
+        <StrongName>None</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
 </Project>

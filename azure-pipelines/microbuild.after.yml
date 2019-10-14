@@ -1,0 +1,27 @@
+steps:
+- task: ms-vseng.MicroBuildShipTasks.7c429315-71ba-4cb3-94bb-f829c95f7915.MicroBuildCodesignVerify@2
+  displayName: Verify Signed Files
+  inputs:
+    TargetFolders: |
+      $(Build.SourcesDirectory)/bin/Packages/$(BuildConfiguration)/NuGet
+    WhiteListPathForCerts: $(Build.SourcesDirectory)\azure-pipelines\no_authenticode.txt
+- task: MicroBuildCleanup@1
+  condition: succeededOrFailed()
+  displayName: MicroBuild Cleanup
+
+- task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
+  displayName: Component Detection
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: Ref12.ref12-analyze-task.ref12-analyze-task.Ref12Analyze@0
+  displayName: Ref12 (Codex) Analyze
+  inputs:
+    codexoutputroot: $(Build.ArtifactStagingDirectory)\Codex
+    workflowArguments: |
+      /sourcesDirectory:$(Build.SourcesDirectory)
+      /codexRepoUrl:$(Build.Repository.Uri)
+      /repoName:$(Build.Repository.Name)
+      /additionalCodexArguments:-bld
+      /additionalCodexArguments:$(Build.ArtifactStagingDirectory)/build_logs
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  continueOnError: true
