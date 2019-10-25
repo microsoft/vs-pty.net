@@ -1,16 +1,23 @@
+parameters:
+  windowsPool: Hosted Windows 2019 with VS2019
+
 jobs:
 - job: Windows
-  pool: Hosted Windows 2019 with VS2019
+  pool: ${{ parameters.windowsPool }}
   steps:
   - checkout: self
     submodules: true
     clean: true
   - template: install-dependencies.yml
   - script: .\nbgv cloud -p src
+  - ${{ if eq(variables['system.collectionId'], '011b8bdf-6d56-4f87-be0d-0092136884d9') }}:
+    - template: microbuild.before.yml
   - template: build-winpty.yml
   - template: msbuild.yml
   - template: publish.yml
   - template: archivesymbols.yml
+  - ${{ if eq(variables['system.collectionId'], '011b8bdf-6d56-4f87-be0d-0092136884d9') }}:
+    - template: microbuild.after.yml
 
 - job: Linux
   pool:
@@ -33,3 +40,20 @@ jobs:
   - template: install-dependencies.yml
   - template: dotnet.yml
   - template: publish.yml
+
+- job: WrapUp
+  dependsOn:
+  - Windows
+  - Linux
+  - MacOS
+  pool:
+    vmImage: Ubuntu 16.04
+  condition: succeededOrFailed()
+  steps:
+  - checkout: self
+    clean: true
+  - template: install-dependencies.yml
+    parameters:
+      restore: false
+  - template: publish-codecoverage.yml
+  - template: publish-deployables.yml
