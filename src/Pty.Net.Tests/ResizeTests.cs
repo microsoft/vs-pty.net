@@ -6,6 +6,7 @@ namespace Pty.Net.Tests
     using System;
     using System.IO;
     using System.Runtime.InteropServices;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Xunit;
 
@@ -34,9 +35,13 @@ namespace Pty.Net.Tests
         {
             using var terminal = await Utilities.CreateConnectionAsync(Utilities.TimeoutToken);
 
-            Assert.Throws<OverflowException>(() => terminal.Resize(short.MaxValue + 1, 25));
-            Assert.Throws<OverflowException>(() => terminal.Resize(80, short.MaxValue + 1));
-            Assert.Throws<OverflowException>(() => terminal.Resize(short.MaxValue + 1, short.MaxValue + 1));
+            var size = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? short.MaxValue + 1
+                : ushort.MaxValue + 1;
+
+            Assert.Throws<OverflowException>(() => terminal.Resize(size, 25));
+            Assert.Throws<OverflowException>(() => terminal.Resize(80, size));
+            Assert.Throws<OverflowException>(() => terminal.Resize(size, size));
         }
 
         [Fact]
@@ -44,27 +49,31 @@ namespace Pty.Net.Tests
         {
             using var terminal = await Utilities.CreateConnectionAsync(Utilities.TimeoutToken);
 
-            terminal.Resize(short.MaxValue, 25);
-            terminal.Resize(80, short.MaxValue);
-            terminal.Resize(short.MaxValue, short.MaxValue);
+            var size = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                ? (int)short.MaxValue
+                : (int)ushort.MaxValue;
+
+            terminal.Resize(size, 25);
+            terminal.Resize(80, size);
+            terminal.Resize(size, size);
         }
 
         [Fact]
         public async Task ActuallyResizesTest()
         {
             using var terminal = await Utilities.CreateConnectionAsync(Utilities.TimeoutToken);
-            using var writer = new StreamWriter(terminal.WriterStream);
-
             terminal.Resize(72, 13);
 
             var command = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                ? "mode\r"
-                : "echo -n Lines: && tput lines && echo -n Columns: && tput cols\r";
+                ? "mode"
+                : "echo Lines: && tput lines && echo Columns: && tput cols";
 
-            await writer.WriteAsync(command);
-            await writer.FlushAsync();
+            var output = await Utilities.RunAndFind(terminal, command, "Lines:\\D*(?<rows>\\d+).*Columns:\\D*(?<cols>\\d+)");
 
-            Assert.True(await Utilities.FindOutput(terminal.ReaderStream, "Lines:\\s*13\\s*Columns:\\s*72", Utilities.TimeoutToken));
+            var metches = Regex.Match(output, "Lines:\\D*(?<rows>\\d+).*Columns:\\D*(?<cols>\\d+)");
+
+            Assert.Equal("13", metches.Groups["rows"].Value);
+            Assert.Equal("72", metches.Groups["cols"].Value);
         }
     }
 }

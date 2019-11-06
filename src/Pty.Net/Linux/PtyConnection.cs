@@ -3,6 +3,7 @@
 
 namespace Pty.Net.Linux
 {
+    using System;
     using System.Diagnostics;
     using static Pty.Net.Linux.NativeMethods;
 
@@ -19,18 +20,33 @@ namespace Pty.Net.Linux
         public PtyConnection(int master, int pid)
             : base(master, pid)
         {
+            int flags = NativeMethods.fcntl(master, (int)NativeMethods.FcntlOperation.F_GETFL, 0);
+
+            if (flags == -1)
+            {
+                throw new InvalidOperationException("something failed yo");
+            }
+
+            var retval = NativeMethods.fcntl(master, (int)NativeMethods.FcntlOperation.F_SETFL, flags | (int)NativeMethods.FcntlFlags.O_NONBLOCK);
         }
 
         /// <inheritdoc/>
         protected override bool Kill(int master)
         {
-            return kill(this.Pid, SIGHUP) != -1;
+            var status = kill(this.Pid, SIGHUP) != -1;
+
+            if (!status)
+            {
+                Console.WriteLine($"failed to kill process {this.Pid}");
+            }
+
+            return status;
         }
 
         /// <inheritdoc/>
         protected override bool Resize(int fd, int cols, int rows)
         {
-            var size = new WinSize((ushort)rows, (ushort)cols);
+            var size = new WinSize(rows, cols);
             return ioctl(fd, TIOCSWINSZ, ref size) != -1;
         }
 

@@ -15,9 +15,9 @@ namespace Pty.Net.Tests
 
     internal static class Utilities
     {
-        public static readonly int TestTimeoutMs = Debugger.IsAttached ? 300_000 : 5_000;
+        public static readonly int TestTimeoutMs = Debugger.IsAttached ? 300_000 : 10_000;
 
-        public static CancellationToken TimeoutToken { get; } = new CancellationTokenSource(TestTimeoutMs).Token;
+        public static CancellationToken TimeoutToken => new CancellationTokenSource(TestTimeoutMs).Token;
 
         public static async Task<IPtyConnection> CreateConnectionAsync(CancellationToken token = default)
         {
@@ -39,12 +39,83 @@ namespace Pty.Net.Tests
             return await PtyProvider.SpawnAsync(options, token);
         }
 
+        public static async Task RunCommand(this IPtyConnection terminal, string command, CancellationToken token = default)
+        {
+            var processExitedTcs = new TaskCompletionSource<uint>();
+            terminal.ProcessExited += (sender, e) => processExitedTcs.TrySetResult((uint)terminal.ExitCode);
+            string GetTerminalExitCode() =>
+                processExitedTcs.Task.IsCompleted ? $". Terminal process has exited with exit code {processExitedTcs.Task.GetAwaiter().GetResult()}." : string.Empty;
+
+            var firstOutput = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var firstDataFound = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
+            var checkForFirstOutput = Task.Run(async () =>
+            {
+                var buffer = new byte[4096];
+
+                var ansiRegex = new Regex(
+                   @"[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PRZcf-ntqry=><~]))");
+                var output = string.Empty;
+
+                while (!token.IsCancellationRequested)
+                {
+                    int count = await terminal.ReaderStream.ReadAsync(buffer, 0, buffer.Length).WithCancellation(token);
+                    if (count == 0)
+                    {
+                        break;
+                    }
+
+                    firstOutput.TrySetResult(null);
+
+                    output += encoding.GetString(buffer, 0, count);
+                    output = output.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                    output = ansiRegex.Replace(output, string.Empty);
+                    var index = output.IndexOf(command);
+                    if (index >= 0)
+                    {
+                        firstDataFound.TrySetResult(null);
+                        return;
+                    }
+                }
+
+                firstOutput.TrySetCanceled();
+                firstDataFound.TrySetCanceled();
+                return;
+            });
+
+            byte[] commandBuffer = encoding.GetBytes(command);
+
+            try
+            {
+                await firstOutput.Task;
+                Console.WriteLine("first output found");
+            }
+            catch (OperationCanceledException exception)
+            {
+                throw new InvalidOperationException(
+                    $"Could not get any output from terminal{GetTerminalExitCode()}",
+                    exception);
+            }
+
+            await terminal.WriterStream.WriteAsync(commandBuffer, 0, commandBuffer.Length, token);
+            await terminal.WriterStream.FlushAsync();
+
+            await firstDataFound.Task.WithCancellation(token);
+
+            await terminal.WriterStream.WriteAsync(new byte[] { 0x0D }, 0, 1, token);
+            await terminal.WriterStream.FlushAsync();
+
+            await checkForFirstOutput;
+        }
+
         public static async Task<bool> FindOutput(Stream terminalReadStream, string search, CancellationToken token = default)
         {
             var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             var buffer = new byte[4096];
+
             var ansiRegex = new Regex(
-                @"[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PRZcf-ntqry=><~]))");
+               @"[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PRZcf-ntqry=><~]))");
             var searchRegex = new Regex(search);
             var output = string.Empty;
 
@@ -59,7 +130,6 @@ namespace Pty.Net.Tests
                 output += encoding.GetString(buffer, 0, count);
                 output = output.Replace("\r", string.Empty).Replace("\n", string.Empty);
                 output = ansiRegex.Replace(output, string.Empty);
-
                 if (searchRegex.IsMatch(output))
                 {
                     return true;
@@ -69,7 +139,96 @@ namespace Pty.Net.Tests
             return false;
         }
 
-        private static async Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
+        public static async Task<string> RunAndFind(IPtyConnection terminal, string command, string search, CancellationToken token = default)
+        {
+            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            var processExitedTcs = new TaskCompletionSource<uint>();
+            terminal.ProcessExited += (sender, e) => processExitedTcs.TrySetResult((uint)terminal.ExitCode);
+
+            string GetTerminalExitCode() =>
+                processExitedTcs.Task.IsCompleted ? $". Terminal process has exited with exit code {processExitedTcs.Task.GetAwaiter().GetResult()}." : string.Empty;
+
+            var firstOutput = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var firstDataFound = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var output = string.Empty;
+            var regexOffset = 0;
+
+            var checkTerminalOutputAsync = Task.Run(async () =>
+            {
+                var buffer = new byte[4096];
+                var ansiRegex = new Regex(
+                    @"[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PRZcf-ntqry=><~]))");
+                var searchRegex = new Regex(search);
+                while (!token.IsCancellationRequested && !processExitedTcs.Task.IsCompleted)
+                {
+                    int count = await terminal.ReaderStream.ReadAsync(buffer, 0, buffer.Length).WithCancellation(token);
+                    if (count == 0)
+                    {
+                        break;
+                    }
+
+                    firstOutput.TrySetResult(null);
+
+                    output += encoding.GetString(buffer, 0, count);
+                    output = output.Replace("\r", string.Empty).Replace("\n", string.Empty);
+                    output = ansiRegex.Replace(output, string.Empty);
+
+                    Console.WriteLine($"output: {output}");
+                    var index = output.IndexOf(command);
+                    if (index >= 0)
+                    {
+                        regexOffset = index + command.Length;
+                        firstDataFound.TrySetResult(null);
+                        if (index <= output.Length - (2 * search.Length)
+                            && output.IndexOf(search, index + search.Length) >= 0)
+                        {
+                            return search;
+                        }
+                        else if (searchRegex.IsMatch(output, regexOffset))
+                        {
+                            return searchRegex.Match(output, regexOffset).ToString();
+                        }
+                    }
+                }
+
+                firstOutput.TrySetCanceled();
+                firstDataFound.TrySetCanceled();
+                return null;
+            });
+
+            try
+            {
+                await firstOutput.Task;
+            }
+            catch (OperationCanceledException exception)
+            {
+                throw new InvalidOperationException(
+                    $"Could not get any output from terminal{GetTerminalExitCode()}",
+                    exception);
+            }
+
+            try
+            {
+                byte[] commandBuffer = encoding.GetBytes(command);
+                await terminal.WriterStream.WriteAsync(commandBuffer, 0, commandBuffer.Length, token);
+                await terminal.WriterStream.FlushAsync();
+
+                await firstDataFound.Task;
+
+                await terminal.WriterStream.WriteAsync(new byte[] { 0x0D }, 0, 1, token); // Enter
+                await terminal.WriterStream.FlushAsync();
+
+                return await checkTerminalOutputAsync;
+            }
+            catch (Exception exception)
+            {
+                throw new InvalidOperationException(
+                    $"Could not get expected data from terminal.{GetTerminalExitCode()} Actual terminal output:\n{output}",
+                    exception);
+            }
+        }
+
+        public static async Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<bool>();
             using (cancellationToken.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))

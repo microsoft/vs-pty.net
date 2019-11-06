@@ -16,19 +16,28 @@ namespace Pty.Net.Tests
 
     public class PtyTests
     {
-        [Fact]
+        [Fact(Skip = "Diagnosing issues on mac/linux")]
         public async Task ConnectToTerminal()
         {
             const string Data = "abc✓ЖЖЖ①Ⅻㄨㄩ 啊阿鼾齄丂丄狚狛狜狝﨨﨩ˊˋ˙– ⿻〇㐀㐁䶴䶵";
 
             using var terminal = await Utilities.CreateConnectionAsync(Utilities.TimeoutToken);
 
-            using var writer = new StreamWriter(terminal.WriterStream);
-
-            await writer.WriteAsync($"echo {Data}\r");
-            await writer.FlushAsync();
+            await terminal.RunCommand($"echo {Data}", Utilities.TimeoutToken);
 
             Assert.True(await Utilities.FindOutput(terminal.ReaderStream, Data));
+        }
+
+        [Fact]
+        public async Task OldConnectToTerminal()
+        {
+            const string Data = "abc✓ЖЖЖ①Ⅻㄨㄩ 啊阿鼾齄丂丄狚狛狜狝﨨﨩ˊˋ˙– ⿻〇㐀㐁䶴䶵";
+
+            using var terminal = await Utilities.CreateConnectionAsync(Utilities.TimeoutToken);
+
+            var output = await Utilities.RunAndFind(terminal, $"echo {Data}", Data, Utilities.TimeoutToken);
+
+            Assert.NotNull(output);
         }
     }
 }

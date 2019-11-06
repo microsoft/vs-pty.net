@@ -30,7 +30,7 @@ namespace Pty.Net.Mac
         /// <inheritdoc/>
         protected override bool Resize(int fd, int cols, int rows)
         {
-            var size = new WinSize((ushort)rows, (ushort)cols);
+            var size = new WinSize(rows, cols);
             return ioctl(fd, TIOCSWINSZ, ref size) != -1;
         }
 

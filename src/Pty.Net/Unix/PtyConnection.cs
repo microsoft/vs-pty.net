@@ -65,7 +65,14 @@ namespace Pty.Net.Unix
         {
             this.ReaderStream?.Dispose();
             this.WriterStream?.Dispose();
-            this.Kill();
+
+            try
+            {
+                this.Kill();
+            }
+            catch
+            {
+            }
         }
 
         /// <inheritdoc/>
@@ -80,6 +87,16 @@ namespace Pty.Net.Unix
         /// <inheritdoc/>
         public void Resize(int cols, int rows)
         {
+            if (cols < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(cols));
+            }
+
+            if (rows < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            }
+
             if (!this.Resize(this.master, cols, rows))
             {
                 throw new InvalidOperationException($"Resizing terminal failed with error {Marshal.GetLastWin32Error()}");
@@ -144,10 +161,10 @@ namespace Pty.Net.Unix
                 return;
             }
 
-            Console.WriteLine($"Wait succeeded");
             this.exitSignal = status & SignalMask;
             this.exitCode = this.exitSignal == 0 ? (status >> 8) & ExitCodeMask : 0;
             this.terminalProcessTerminatedEvent.Set();
+            Console.WriteLine($"Wait on {this.pid} succeeded with signal {this.exitSignal}, code: {this.exitCode}");
             this.ProcessExited?.Invoke(this, new PtyExitedEventArgs(this.exitCode));
         }
     }

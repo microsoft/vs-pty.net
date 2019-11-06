@@ -253,10 +253,10 @@ namespace Pty.Net.Mac
             public ushort XPixel;
             public ushort YPixel;
 
-            public WinSize(ushort rows, ushort cols)
+            public WinSize(int rows, int cols)
             {
-                this.Rows = rows;
-                this.Cols = cols;
+                this.Rows = checked((ushort)rows);
+                this.Cols = checked((ushort)cols);
                 this.XPixel = 0;
                 this.YPixel = 0;
             }
