@@ -39,7 +39,7 @@ namespace Pty.Net.Windows
         }
 
         /// <inheritdoc/>
-        public event EventHandler? ProcessExited;
+        public event EventHandler<PtyExitedEventArgs>? ProcessExited;
 
         /// <inheritdoc/>
         public Stream ReaderStream { get; }
@@ -83,7 +83,7 @@ namespace Pty.Net.Windows
 
         private void Process_Exited(object sender, EventArgs e)
         {
-            this.ProcessExited?.Invoke(this, e);
+            this.ProcessExited?.Invoke(this, new PtyExitedEventArgs(this.process.ExitCode));
         }
     }
 }

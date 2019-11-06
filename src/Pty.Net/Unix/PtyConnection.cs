@@ -46,7 +46,7 @@ namespace Pty.Net.Unix
         }
 
         /// <inheritdoc/>
-        public event EventHandler? ProcessExited;
+        public event EventHandler<PtyExitedEventArgs>? ProcessExited;
 
         /// <inheritdoc/>
         public Stream ReaderStream { get; }
@@ -148,7 +148,7 @@ namespace Pty.Net.Unix
             this.exitSignal = status & SignalMask;
             this.exitCode = this.exitSignal == 0 ? (status >> 8) & ExitCodeMask : 0;
             this.terminalProcessTerminatedEvent.Set();
-            this.ProcessExited?.Invoke(this, EventArgs.Empty);
+            this.ProcessExited?.Invoke(this, new PtyExitedEventArgs(this.exitCode));
         }
     }
 }
