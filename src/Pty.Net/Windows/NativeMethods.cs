@@ -175,13 +175,13 @@ namespace Pty.Net.Windows
         [StructLayout(LayoutKind.Sequential)]
         internal struct Coord
         {
-            public ushort X;
-            public ushort Y;
+            public short X;
+            public short Y;
 
             public Coord(int x, int y)
             {
-                this.X = (ushort)x;
-                this.Y = (ushort)y;
+                this.X = checked((short)x);
+                this.Y = checked((short)y);
             }
         }
 
