@@ -6,13 +6,14 @@ jobs:
   pool: ${{ parameters.windowsPool }}
   steps:
   - checkout: self
-    submodules: true
+    submodules: recursive
     clean: true
   - template: install-dependencies.yml
   - script: .\nbgv cloud -p src
   - ${{ if eq(variables['system.collectionId'], '011b8bdf-6d56-4f87-be0d-0092136884d9') }}:
     - template: microbuild.before.yml
   - template: build-winpty.yml
+  - template: build-openconsole.yml
   - template: msbuild.yml
   - template: publish.yml
   - template: archivesymbols.yml

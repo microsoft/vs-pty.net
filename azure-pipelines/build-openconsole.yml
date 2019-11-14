@@ -1,0 +1,23 @@
+steps:
+- task: NuGetCommand@2
+  inputs:
+    command: restore
+    feedsToUse: config
+    configPath: NuGet.config
+    restoreSolution: dep/terminal/OpenConsole.sln
+
+- task: VSBuild@1
+  displayName: 'Build OpenConsole'
+  inputs:
+    solution: 'dep/terminal/OpenConsole.sln'
+    msbuildArgs: /t:Conhost\winconpty;Conhost\Host_EXE
+    platform: 'x86'
+    configuration: '$(BuildConfiguration)'
+
+- task: VSBuild@1
+  displayName: 'Build OpenConsole'
+  inputs:
+    solution: 'dep/terminal/OpenConsole.sln'
+    msbuildArgs: /t:Conhost\winconpty;Conhost\Host_EXE
+    platform: 'x64'
+    configuration: '$(BuildConfiguration)'

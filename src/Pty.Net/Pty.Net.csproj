@@ -5,10 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OutputWinPtyFiles Include="$(OutputPath)\winpty\**\*" />
-    <None Include="@(OutputWinPtyFiles)">
+    <OutputPtyFiles Include="$(OutputPath)\winpty\**\*" />
+    <OutputPtyFiles Include="$(OutputPath)\conpty\**\*" />
+    <None Include="@(OutputPtyFiles)">
       <Pack>true</Pack>
-      <PackagePath>%(OutputWinPtyFiles.RecursiveDir)</PackagePath>
+      <PackagePath>%(OutputPtyFiles.RecursiveDir)</PackagePath>
     </None>
   </ItemGroup>
   
@@ -16,9 +17,27 @@
     <None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
+    <None Include="$(OpenConsoleReleasePath)\x64\Release\*.dll;$(OpenConsoleReleasePath)\x64\Release\*.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>runtimes\win-x86\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>runtimes\win-x86\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>runtimes\win-x64\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>runtimes\win-x64\native\</PackagePath>
+      </OpenConsoleFiles>
+    </ItemGroup>
     <ItemGroup>
       <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
         <PackagePath>runtimes\win-x86\native\</PackagePath>
@@ -36,12 +55,17 @@
       </WinPtyFiles>
     </ItemGroup>
     <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(BaseOutputPath)\$(Configuration)\winpty\%(WinPtyFiles.PackagePath)" />
+    <Copy SourceFiles="@(OpenConsoleFiles)" DestinationFolder="$(BaseOutputPath)\$(Configuration)\conpty\%(OpenConsoleFiles.PackagePath)" />
   </Target>
   
   <Target Name="SetupFilesToSign" BeforeTargets="CollectFilesToSign">
     <!--The publish step below pulls from the intermediate output path so we need to sign the intermediate assembly instead of the target path assembly so publish gets the signed version of the file-->
     <ItemGroup>
       <FilesToSign Include="$(OutputPath)\winpty\**\*">
+        <Authenticode>3PartySHA2</Authenticode>
+        <StrongName>None</StrongName>
+      </FilesToSign>
+      <FilesToSign Include="$(OutputPath)\conpty\**\*">
         <Authenticode>3PartySHA2</Authenticode>
         <StrongName>None</StrongName>
       </FilesToSign>
