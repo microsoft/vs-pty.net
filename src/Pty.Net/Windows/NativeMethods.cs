@@ -76,14 +76,14 @@ namespace Pty.Net.Windows
             ref STARTUPINFOEX lpStartupInfo,                // LPSTARTUPINFO
             out PROCESS_INFORMATION lpProcessInformation);  // LPPROCESS_INFORMATION
 
-        [DllImport("kernel32.dll")]
+        [DllImport("conpty.dll")]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
         internal static extern int CreatePseudoConsole(Coord coord, IntPtr input, IntPtr output, uint flags, out IntPtr consoleHandle);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("conpty.dll")]
         internal static extern int ResizePseudoConsole(SafePseudoConsoleHandle consoleHandle, Coord coord);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("conpty.dll")]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         internal static extern void ClosePseudoConsole(IntPtr consoleHandle);
 
