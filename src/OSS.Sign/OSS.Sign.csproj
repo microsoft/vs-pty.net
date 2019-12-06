@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Remove="Nerdbank.GitVersioning" />
+  </ItemGroup>
+
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <ItemGroup>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>win-x86\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>win-x86\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>win-x64\native\</PackagePath>
+      </OpenConsoleFiles>
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
+        <PackagePath>win-x64\native\</PackagePath>
+      </OpenConsoleFiles>
+    </ItemGroup>
+    <ItemGroup>
+      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>win-x86\native\</PackagePath>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>win-x86\native\</PackagePath>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>win-x64\native\</PackagePath>
+      </WinPtyFiles>
+      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
+        <PackagePath>win-x64\native\</PackagePath>
+      </WinPtyFiles>
+    </ItemGroup>
+    <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(OutputPath)\winpty\%(WinPtyFiles.PackagePath)" />
+    <Copy SourceFiles="@(OpenConsoleFiles)" DestinationFolder="$(OutputPath)\conpty\%(OpenConsoleFiles.PackagePath)" />
+  </Target>
+
+  <Target Name="SetupFilesToSign" BeforeTargets="CollectFilesToSign">
+    <!--The publish step below pulls from the intermediate output path so we need to sign the intermediate assembly instead of the target path assembly so publish gets the signed version of the file-->
+    <ItemGroup>
+      <FilesToSign Include="$(OutputPath)\winpty\**\*">
+        <Authenticode>3PartySHA2</Authenticode>
+        <StrongName>None</StrongName>
+      </FilesToSign>
+      <FilesToSign Include="$(OutputPath)\conpty\**\*">
+        <Authenticode>3PartySHA2</Authenticode>
+        <StrongName>None</StrongName>
+      </FilesToSign>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CopySignedFiles" AfterTargets="Build">
+    <ItemGroup>
+      <SignedWinPty Include="$(OutputPath)\winpty\**\*" />
+      <SignedOpenConsole Include="$(OutputPath)\conpty\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SignedWinPty)" DestinationFolder="$(RepoRootPath)\bin\winpty\%(SignedWinPty.RecursiveDir)" />
+    <Copy SourceFiles="@(SignedOpenConsole)" DestinationFolder="$(RepoRootPath)\bin\conpty\%(SignedOpenConsole.RecursiveDir)" />
+  </Target>
+</Project>

@@ -1,18 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.2</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <OutputPtyFiles Include="$(OutputPath)\winpty\**\*" />
-    <OutputPtyFiles Include="$(OutputPath)\conpty\**\*" />
-    <None Include="@(OutputPtyFiles)">
-      <Pack>true</Pack>
-      <PackagePath>%(OutputPtyFiles.RecursiveDir)</PackagePath>
-    </None>
-  </ItemGroup>
-  
   <ItemGroup>
     <None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -22,53 +13,19 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
-    <ItemGroup>
-      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>runtimes\win-x86\native\</PackagePath>
-      </OpenConsoleFiles>
-      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>runtimes\win-x86\native\</PackagePath>
-      </OpenConsoleFiles>
-      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>runtimes\win-x64\native\</PackagePath>
-      </OpenConsoleFiles>
-      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>runtimes\win-x64\native\</PackagePath>
-      </OpenConsoleFiles>
-    </ItemGroup>
-    <ItemGroup>
-      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>runtimes\win-x86\native\</PackagePath>
-      </WinPtyFiles>
-      <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>runtimes\win-x86\native\</PackagePath>
-      </WinPtyFiles>
-      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>runtimes\win-x64\native\</PackagePath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </WinPtyFiles>
-      <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>runtimes\win-x64\native\</PackagePath>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </WinPtyFiles>
-    </ItemGroup>
-    <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(BaseOutputPath)\$(Configuration)\winpty\%(WinPtyFiles.PackagePath)" />
-    <Copy SourceFiles="@(OpenConsoleFiles)" DestinationFolder="$(BaseOutputPath)\$(Configuration)\conpty\%(OpenConsoleFiles.PackagePath)" />
-  </Target>
   
-  <Target Name="SetupFilesToSign" BeforeTargets="CollectFilesToSign">
-    <!--The publish step below pulls from the intermediate output path so we need to sign the intermediate assembly instead of the target path assembly so publish gets the signed version of the file-->
+  <ItemGroup>
+    <ProjectReference Include="..\OSS.Sign\OSS.Sign.csproj" />
+  </ItemGroup>
+
+  <Target Name="CollectNugetFiles" BeforeTargets="_GetPackageFiles">
     <ItemGroup>
-      <FilesToSign Include="$(OutputPath)\winpty\**\*">
-        <Authenticode>3PartySHA2</Authenticode>
-        <StrongName>None</StrongName>
-      </FilesToSign>
-      <FilesToSign Include="$(OutputPath)\conpty\**\*">
-        <Authenticode>3PartySHA2</Authenticode>
-        <StrongName>None</StrongName>
-      </FilesToSign>
+      <OutputPtyFiles Include="$(RepoRootPath)\bin\winpty\**\*" />
+      <OutputPtyFiles Include="$(RepoRootPath)\bin\conpty\**\*" />
+      <None Include="@(OutputPtyFiles)">
+        <Pack>true</Pack>
+        <PackagePath>runtimes</PackagePath>
+      </None>
     </ItemGroup>
   </Target>
 </Project>
