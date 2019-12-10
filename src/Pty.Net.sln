@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29230.54
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pty.Net", "Pty.Net\Pty.Net.csproj", "{EA6AB44D-7A75-4BE9-BF95-A74F64C2C58E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pty.Net.Tests", "Pty.Net.Tests\Pty.Net.Tests.csproj", "{16B79A47-23A7-48C9-9B9F-C258423A7F64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pty.Net.Tests", "Pty.Net.Tests\Pty.Net.Tests.csproj", "{16B79A47-23A7-48C9-9B9F-C258423A7F64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSS.Sign", "OSS.Sign\OSS.Sign.csproj", "{BC451674-22BB-4A36-A169-BE100B4071A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{16B79A47-23A7-48C9-9B9F-C258423A7F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16B79A47-23A7-48C9-9B9F-C258423A7F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16B79A47-23A7-48C9-9B9F-C258423A7F64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC451674-22BB-4A36-A169-BE100B4071A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC451674-22BB-4A36-A169-BE100B4071A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC451674-22BB-4A36-A169-BE100B4071A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC451674-22BB-4A36-A169-BE100B4071A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
