@@ -1,0 +1,21 @@
+﻿<Project>
+  <ItemGroup>
+    <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' != 'AnyCPU'" 
+                 Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\**\*" />
+  </ItemGroup>
+  
+  <Target Name="CopyPtyNativeFiles">
+    <Copy SourceFiles="@(ConPtyFiles)" DestinationFiles="$(OutDir)\%(RecursiveDir)\%(FileName)%(Extension)" />
+  </Target>
+
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      CopyPtyNativeFiles;
+    </PostBuildEventDependsOn>
+    <BuildDependsOn>
+      $(BuildDependsOn);
+      CopyPtyNativeFiles;
+    </BuildDependsOn>
+  </PropertyGroup>
+</Project>
