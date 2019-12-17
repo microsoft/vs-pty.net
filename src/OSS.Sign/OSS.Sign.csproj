@@ -12,30 +12,30 @@
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <ItemGroup>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>win-x86\native\</PackagePath>
+        <PackagePath>x86</PackagePath>
       </OpenConsoleFiles>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>win-x86\native\</PackagePath>
+        <PackagePath>x86</PackagePath>
       </OpenConsoleFiles>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>win-x64\native\</PackagePath>
+        <PackagePath>x64</PackagePath>
       </OpenConsoleFiles>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\x64\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
-        <PackagePath>win-x64\native\</PackagePath>
+        <PackagePath>x64</PackagePath>
       </OpenConsoleFiles>
     </ItemGroup>
     <ItemGroup>
       <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>win-x86\native\</PackagePath>
+        <PackagePath>x86</PackagePath>
       </WinPtyFiles>
       <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>win-x86\native\</PackagePath>
+        <PackagePath>x86</PackagePath>
       </WinPtyFiles>
       <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty.dll" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>win-x64\native\</PackagePath>
+        <PackagePath>x64</PackagePath>
       </WinPtyFiles>
       <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
-        <PackagePath>win-x64\native\</PackagePath>
+        <PackagePath>x64</PackagePath>
       </WinPtyFiles>
     </ItemGroup>
     <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(OutputPath)\winpty\%(WinPtyFiles.PackagePath)" />

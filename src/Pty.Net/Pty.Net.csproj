@@ -6,11 +6,19 @@
 
   <ItemGroup>
     <None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
+      <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
 
     <None Include="$(OpenConsoleReleasePath)\x64\Release\*.dll;$(OpenConsoleReleasePath)\x64\Release\*.exe">
+      <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LinkBase>os64\</LinkBase>
+    </None>
+
+    <None Include="Pty.Net.targets">
+      <Pack>true</Pack>
+      <PackagePath>build\</PackagePath>
     </None>
   </ItemGroup>
   
@@ -23,10 +31,44 @@
   <Target Name="CollectNugetFiles" BeforeTargets="_GetPackageFiles">
     <ItemGroup>
       <OutputPtyFiles Include="$(RepoRootPath)\bin\winpty\**\*" />
-      <OutputPtyFiles Include="$(RepoRootPath)\bin\conpty\**\*" />
+      
       <None Include="@(OutputPtyFiles)">
         <Pack>true</Pack>
-        <PackagePath>runtimes</PackagePath>
+        <PackagePath>build\</PackagePath>
+      </None>
+
+      <None Include="$(RepoRootPath)\bin\conpty\x86\conpty.dll">
+        <Pack>true</Pack>
+        <PackagePath>build\x86\os86</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x86\conpty.dll">
+        <Pack>true</Pack>
+        <PackagePath>build\x86\os64</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x86\OpenConsole.exe">
+        <Pack>true</Pack>
+        <PackagePath>build\x86\os86</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x64\OpenConsole.exe">
+        <Pack>true</Pack>
+        <PackagePath>build\x86\os64</PackagePath>
+      </None>
+
+      <None Include="$(RepoRootPath)\bin\conpty\x64\conpty.dll">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\os86</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x64\conpty.dll">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\os64</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x86\OpenConsole.exe">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\os86</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\x64\OpenConsole.exe">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\os64</PackagePath>
       </None>
     </ItemGroup>
   </Target>
