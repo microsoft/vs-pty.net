@@ -3,7 +3,8 @@ parameters:
 
 jobs:
 - job: Windows
-  pool: ${{ parameters.windowsPool }}
+  pool: 
+    name: ${{ parameters.windowsPool }}
     demands:
     - agent.name -equals DDMBLDW250 # Check if Agent.OS == Linux
   steps:
