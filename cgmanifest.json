@@ -1,0 +1,14 @@
+{
+    "Registrations":[
+        {
+            "Component": {
+                "Type": "git",
+                "git": {
+                    "RepositoryUrl": "https://github.com/rprichard/winpty",
+                    "CommitHash": "7e59fe2d09adf0fa2aa606492e7ca98efbc5184e"
+                }
+            },
+            "DevelopmentDependency" : false
+        }
+    ]
+}
