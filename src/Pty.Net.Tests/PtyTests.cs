@@ -16,7 +16,7 @@ namespace Pty.Net.Tests
 
     public class PtyTests
     {
-        [Fact(Skip = "Diagnosing issues on mac/linux")]
+        [Fact]
         public async Task ConnectToTerminal()
         {
             const string Data = "abc✓ЖЖЖ①Ⅻㄨㄩ 啊阿鼾齄丂丄狚狛狜狝﨨﨩ˊˋ˙– ⿻〇㐀㐁䶴䶵";

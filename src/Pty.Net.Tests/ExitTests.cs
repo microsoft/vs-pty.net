@@ -13,7 +13,7 @@ namespace Pty.Net.Tests
 
     public class ExitTests
     {
-        [Fact(Skip = "Diagnosing issues on mac/linux")]
+        [Fact]
         public async Task SuccessfulExitTest()
         {
             var completionSource = new TaskCompletionSource<int>();
@@ -32,7 +32,7 @@ namespace Pty.Net.Tests
             Assert.Equal(0, terminal.ExitCode);
         }
 
-        [Fact(Skip = "Diagnosing issues on mac/linux")]
+        [Fact]
         public async Task UnsuccessfulExitTest()
         {
             var completionSource = new TaskCompletionSource<int>();
@@ -51,7 +51,7 @@ namespace Pty.Net.Tests
             Assert.Equal(1, terminal.ExitCode);
         }
 
-        [Fact(Skip = "Diagnosing issues on mac/linux")]
+        [Fact]
         public async Task ForceKillTest()
         {
             var completionSource = new TaskCompletionSource<int>();
