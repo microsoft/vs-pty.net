@@ -18,7 +18,7 @@ namespace Pty.Net.Unix
         /// <param name="fd">The fd to connect the stream to.</param>
         /// <param name="fileAccess">The access permissions to set on the fd.</param>
         public PtyStream(int fd, FileAccess fileAccess)
-            : base(new SafeFileHandle((IntPtr)fd, ownsHandle: false), fileAccess, bufferSize: 1024, isAsync: false)
+            : base(new SafeFileHandle((IntPtr)fd, ownsHandle: false), fileAccess, bufferSize: 1024, isAsync: true)
         {
         }
 

@@ -75,6 +75,16 @@ namespace Pty.Net.Windows
         /// <inheritdoc/>
         public void Resize(int cols, int rows)
         {
+            if (cols < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(cols));
+            }
+
+            if (rows < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rows));
+            }
+
             int hr = ResizePseudoConsole(this.handles.PseudoConsoleHandle, new Coord(cols, rows));
             if (hr != S_OK)
             {

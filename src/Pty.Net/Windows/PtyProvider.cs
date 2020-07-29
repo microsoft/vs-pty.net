@@ -322,7 +322,7 @@ namespace Pty.Net.Windows
                 throw new InvalidOperationException("Could not create an anonymous pipe", new Win32Exception());
             }
 
-            var coord = new Coord(options.Cols, options.Rows);
+            var coord = new Coord(checked((short)options.Cols), checked((short)options.Rows));
             var pseudoConsoleHandle = new SafePseudoConsoleHandle();
             int hr;
             RuntimeHelpers.PrepareConstrainedRegions();

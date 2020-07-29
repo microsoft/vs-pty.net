@@ -83,6 +83,17 @@ namespace Pty.Net.Linux
             VTIME = 5,
         }
 
+        public enum FcntlOperation
+        {
+            F_GETFL = 3,
+            F_SETFL = 4,
+        }
+
+        public enum FcntlFlags
+        {
+            O_NONBLOCK = 0x0004,
+        }
+
         // int cfsetispeed(struct termios *, speed_t);
         [DllImport(LibSystem)]
         internal static extern int cfsetispeed(ref Termios termios, IntPtr speed);
@@ -138,6 +149,9 @@ namespace Pty.Net.Linux
             }
         }
 
+        [DllImport(LibSystem, SetLastError = true)]
+        internal static extern int fcntl(int fd, int cmd, int flags);
+
         // int int execvpe(const char *file, char *const argv[],char *const envp[]);
         [DllImport(LibSystem, SetLastError = true)]
         private static extern int execvp(
@@ -152,10 +166,10 @@ namespace Pty.Net.Linux
             public ushort XPixel;
             public ushort YPixel;
 
-            public WinSize(ushort rows, ushort cols)
+            public WinSize(int rows, int cols)
             {
-                this.Rows = rows;
-                this.Cols = cols;
+                this.Rows = checked((ushort)rows);
+                this.Cols = checked((ushort)cols);
                 this.XPixel = 0;
                 this.YPixel = 0;
             }
