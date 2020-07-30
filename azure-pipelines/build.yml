@@ -6,7 +6,7 @@ jobs:
   pool: 
     name: ${{ parameters.windowsPool }}
     demands:
-    - agent.name -equals DDMBLDW250 # Check if Agent.OS == Linux
+    - agent.name -equals vs2019mb-00001G # Check if Agent.OS == Linux
   steps:
   - checkout: self
     submodules: recursive
