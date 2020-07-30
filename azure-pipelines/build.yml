@@ -55,6 +55,6 @@ jobs:
     clean: true
   - template: install-dependencies.yml
     parameters:
-      restore: false
+      initArgs: -NoRestore
   - template: publish-codecoverage.yml
   - template: publish-deployables.yml

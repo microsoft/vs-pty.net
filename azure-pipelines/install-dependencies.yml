@@ -2,23 +2,10 @@ parameters:
     restore: true
 
 steps:
-- task: DotNetCoreInstaller@2
-  displayName: Install .Net Core SDK
-  inputs:
-    packageType: sdk
-    version: 2.2.402
-
-- script: dotnet --info
-  displayName: Show dotnet SDK info
-
-- task: NuGetToolInstaller@0
-  displayName: Pin nuget version
-  inputs:
-    versionSpec: 5.2.0
-
-- ${{ if eq(parameters.restore, 'true') }}:
-  - powershell: dotnet restore src\Pty.Net.sln
-    displayName: Restore NuGet packages
+- powershell: |
+    .\init.ps1 -AccessToken '$(System.AccessToken)' ${{ parameters['initArgs'] }} -UpgradePrerequisites
+    dotnet --info
+  displayName: Install prerequisites
 
 - script: |
     dotnet tool install --tool-path . nbgv
