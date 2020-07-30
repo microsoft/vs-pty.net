@@ -17,7 +17,7 @@ namespace Pty.Net.Unix
         private const int EINTR = 4;
         private const int ECHILD = 10;
 
-        private readonly int master;
+        private readonly int controller;
         private readonly int pid;
         private readonly ManualResetEvent terminalProcessTerminatedEvent = new ManualResetEvent(false);
         private int exitCode;
@@ -26,14 +26,14 @@ namespace Pty.Net.Unix
         /// <summary>
         /// Initializes a new instance of the <see cref="PtyConnection"/> class.
         /// </summary>
-        /// <param name="master">The fd of the "master" pty.</param>
+        /// <param name="controller">The fd of the pty controller.</param>
         /// <param name="pid">The id of the spawned process.</param>
-        public PtyConnection(int master, int pid)
+        public PtyConnection(int controller, int pid)
         {
-            this.ReaderStream = new PtyStream(master, FileAccess.Read);
-            this.WriterStream = new PtyStream(master, FileAccess.Write);
+            this.ReaderStream = new PtyStream(controller, FileAccess.Read);
+            this.WriterStream = new PtyStream(controller, FileAccess.Write);
 
-            this.master = master;
+            this.controller = controller;
             this.pid = pid;
             var childWatcherThread = new Thread(this.ChildWatcherThreadProc)
             {
@@ -71,7 +71,7 @@ namespace Pty.Net.Unix
         /// <inheritdoc/>
         public void Kill()
         {
-            if (!this.Kill(this.master))
+            if (!this.Kill(this.controller))
             {
                 throw new InvalidOperationException($"Killing terminal failed with error {Marshal.GetLastWin32Error()}");
             }
@@ -80,7 +80,7 @@ namespace Pty.Net.Unix
         /// <inheritdoc/>
         public void Resize(int cols, int rows)
         {
-            if (!this.Resize(this.master, cols, rows))
+            if (!this.Resize(this.controller, cols, rows))
             {
                 throw new InvalidOperationException($"Resizing terminal failed with error {Marshal.GetLastWin32Error()}");
             }
@@ -95,18 +95,18 @@ namespace Pty.Net.Unix
         /// <summary>
         /// OS-specific implementation of the pty-resize function.
         /// </summary>
-        /// <param name="master">The fd of the "master" pty.</param>
+        /// <param name="controller">The fd of the pty controller.</param>
         /// <param name="cols">The number of columns to resize to.</param>
         /// <param name="rows">The number of rows to resize to.</param>
         /// <returns>True if the function suceeded to resize the pty, false otherwise.</returns>
-        protected abstract bool Resize(int master, int cols, int rows);
+        protected abstract bool Resize(int controller, int cols, int rows);
 
         /// <summary>
         /// Kills the terminal process.
         /// </summary>
-        /// <param name="master">The fd of the "master" pty.</param>
+        /// <param name="controller">The fd of the pty controller.</param>
         /// <returns>True if the function succeeded in killing the process, false otherwise.</returns>
-        protected abstract bool Kill(int master);
+        protected abstract bool Kill(int controller);
 
         /// <summary>
         /// OS-specific implementation of waiting on the given process id.
