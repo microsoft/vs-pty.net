@@ -1,7 +1,7 @@
 {
-    "version": "0.2-pre",
+    "version": "0.3-pre",
     "publicReleaseRefSpec": [
-      "^refs/heads/master$"
+      "^refs/heads/main$"
     ],
     "cloudBuild": {
       "setVersionVariables": true,

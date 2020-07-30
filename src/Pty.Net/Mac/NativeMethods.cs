@@ -185,7 +185,7 @@ namespace Pty.Net.Mac
         [DllImport(LibSystem)]
         internal static extern int cfsetospeed(ref Termios termios, IntPtr speed);
 
-        // pid_t forkpty(int * amaster, char * aworker, struct termios *, struct winsize *);
+        // pid_t forkpty(int * master, char * aworker, struct termios *, struct winsize *);
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int forkpty(ref int master, StringBuilder? name, ref Termios termp, ref WinSize winsize);
 

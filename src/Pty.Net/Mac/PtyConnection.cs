@@ -14,10 +14,10 @@ namespace Pty.Net.Mac
         /// <summary>
         /// Initializes a new instance of the <see cref="PtyConnection"/> class.
         /// </summary>
-        /// <param name="master">The fd of the "master" pty.</param>
+        /// <param name="controller">The fd of the pty controller.</param>
         /// <param name="pid">The id of the spawned process.</param>
-        public PtyConnection(int master, int pid)
-            : base(master, pid)
+        public PtyConnection(int controller, int pid)
+            : base(controller, pid)
         {
         }
 

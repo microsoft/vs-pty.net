@@ -51,8 +51,8 @@ namespace Pty.Net.Linux
                 speed: TermSpeed.B38400,
                 controlCharacters: controlCharacters);
 
-            int master = 0;
-            int pid = forkpty(ref master, null, ref term, ref winSize);
+            int controller = 0;
+            int pid = forkpty(ref controller, null, ref term, ref winSize);
 
             if (pid == -1)
             {
@@ -70,7 +70,7 @@ namespace Pty.Net.Linux
             }
 
             // We have forked the terminal
-            return Task.FromResult<IPtyConnection>(new PtyConnection(master, pid));
+            return Task.FromResult<IPtyConnection>(new PtyConnection(controller, pid));
         }
     }
 }
