@@ -1,8 +1,9 @@
 steps:
 - task: PublishSymbols@2
   inputs:
-    SearchPattern: '**/bin/**/*.pdb'
+    SymbolsFolder: $(Build.ArtifactStagingDirectory)/symbols-Windows
+    SearchPattern: 'Pty.Net/**/*.pdb'
     IndexSources: false
-    SymbolServerType: 'TeamServices'
-  displayName: Archive symbols to VSTS
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest')) 
+    SymbolServerType: TeamServices
+  displayName: Publish symbols to symbol server
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Agent.OS'], 'Windows_NT'))
