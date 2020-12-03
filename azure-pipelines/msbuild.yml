@@ -3,7 +3,7 @@ steps:
   displayName: Build Visual Studio solution
   inputs:
     solution: 'src\**\*.sln'
-    msbuildArgs: /t:build,pack /m /debug:full /bl:"$(Build.ArtifactStagingDirectory)/build_logs/msbuild.binlog"
+    msbuildArgs: /t:build,pack /m /p:GenerateDebugInformation=DebugFull /bl:"$(Build.ArtifactStagingDirectory)/build_logs/msbuild.binlog"
     platform: $(BuildPlatform)
     configuration: $(BuildConfiguration)
 
