@@ -38,7 +38,7 @@ stages:
   condition: and(succeeded(), eq(variables['SignType'], 'Real'))
   jobs:
   - job: archive
-    pool: VSEng-RMPool
+    pool: VSEng-ReleasePool
     variables:
       SymbolsFeatureName: Pty.Net
     steps:
