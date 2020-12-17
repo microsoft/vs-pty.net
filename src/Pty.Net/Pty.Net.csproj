@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  <DebugType>pdbonly</DebugType>
+  <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
