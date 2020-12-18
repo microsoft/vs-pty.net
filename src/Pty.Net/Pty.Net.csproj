@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  <Authors>Zoey Riordan, Javier De la Garza Sanchez</Authors>
+  <Authors>Microsoft Corporation</Authors>
   <Company>Microsoft Corporation</Company>
   <Description>.Net implementation for PseudoTeletypes</Description>
   <PackageProjectUrl>https://aka.ms/vsextensibility</PackageProjectUrl>
