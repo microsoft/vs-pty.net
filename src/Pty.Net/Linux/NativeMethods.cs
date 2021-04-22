@@ -109,23 +109,16 @@ namespace Pty.Net.Linux
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int kill(int pid, int signal);
 
-        [DllImport("System.Native", EntryPoint = "SystemNative_GetEnviron", SetLastError = true)]
-        internal static extern IntPtr GetEnviron();
+        [DllImport(LibSystem, SetLastError = true)]
+        private static extern int setenv(string name, string value, int overwrite);
 
         internal static void execvpe(string file, string?[] args, IDictionary<string, string> environment)
         {
             // Set environment
-            // As this process is going to be replaced by execvp, there is no need in freeing up the allocated memory.
-            IntPtr ppEnv = GetEnviron();
-            int offset = 0;
-            foreach (var kvp in environment)
+            foreach (var environmentVariable in environment)
             {
-                IntPtr pEnv = Marshal.StringToHGlobalAnsi($"{kvp.Key}={kvp.Value}");
-                Marshal.WriteIntPtr(ppEnv, offset, pEnv);
-                offset += SizeOfIntPtr;
+                setenv(environmentVariable.Key, environmentVariable.Value, 1);
             }
-
-            Marshal.WriteIntPtr(ppEnv, offset, IntPtr.Zero);
 
             if (execvp(file, args) == -1)
             {
