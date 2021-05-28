@@ -17,6 +17,7 @@ variables:
   BuildPlatform: Any CPU
   push_to_ci: true
   NUGET_PACKAGES: $(Agent.TempDirectory)/.nuget/packages
+  NugetSecurityAnalysisWarningLevel: none # nuget.config requires signed packages by trusted owners
 
 stages:
 
