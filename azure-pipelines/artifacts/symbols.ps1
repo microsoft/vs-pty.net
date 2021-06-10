@@ -41,14 +41,13 @@ Function Get-SymbolFiles {
         Write-Host "Preparing $_ for symbol archival" -ForegroundColor DarkGray
 
         $WindowsPdbDir = "$($_.Directory.FullName)\$WindowsPdbSubDirName"
-        if (!(Test-Path $WindowsPdbDir)) { mkdir $WindowsPdbDir | Out-Null }
-
-        Write-Host "Copying $_ to $WindowsPdbDir" -ForegroundColor DarkGray
-        Copy-Item $_ -Destination $WindowsPdbDir -Force
-
-        if ($LASTEXITCODE -ne 0) {
-            Write-Warning "Copying of `"$_`" to `"$WindowsPdbDir`" failed with exit code $LASTEXITCODE"
+        if (!(Test-Path $WindowsPdbDir)) 
+        { 
+            mkdir $WindowsPdbDir | Out-Null 
         }
+
+        Write-Host "Copying $_ to `"$WindowsPdbDir\$($_.BaseName).pdb`"" -ForegroundColor DarkGray
+        Copy-Item $_ -Destination "$WindowsPdbDir\$($_.BaseName).pdb" -Force
     }
 }
 
