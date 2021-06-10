@@ -44,7 +44,7 @@ Function Get-SymbolFiles {
         if (!(Test-Path $WindowsPdbDir)) { mkdir $WindowsPdbDir | Out-Null }
 
         Write-Host "Copying $_ to $WindowsPdbDir" -ForegroundColor DarkGray
-        Copy-Item $_ -Destination $WindowsPdbDir
+        Copy-Item $_ -Destination $WindowsPdbDir -Force
 
         if ($LASTEXITCODE -ne 0) {
             Write-Warning "Copying of `"$_`" to `"$WindowsPdbDir`" failed with exit code $LASTEXITCODE"
