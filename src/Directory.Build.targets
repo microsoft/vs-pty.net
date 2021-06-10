@@ -10,10 +10,7 @@
     These properties must be in the targets file because the .NET SDK is erroneously stomping
     them for some of the DEF assemblies due to this work-around: https://github.com/Microsoft/vstest/pull/528
   -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  <PropertyGroup>
     <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>portable</DebugType>
   </PropertyGroup>
 </Project>
