@@ -47,7 +47,7 @@ Function Get-SymbolFiles {
         Copy-Item $_ -Destination $WindowsPdbDir
 
         if ($LASTEXITCODE -ne 0) {
-            Write-Warning "Copying of `"$_`" to `"$WindowsPdbDir`" failed."
+            Write-Warning "Copying of `"$_`" to `"$WindowsPdbDir`" failed with exit code $LASTEXITCODE"
         }
     }
 }
