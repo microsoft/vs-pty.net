@@ -109,9 +109,6 @@ namespace Pty.Net.Linux
         [DllImport(LibSystem, SetLastError = true)]
         internal static extern int kill(int pid, int signal);
 
-        [DllImport(LibSystem, SetLastError = true)]
-        private static extern int setenv(string name, string value, int overwrite);
-
         internal static void execvpe(string file, string?[] args, IDictionary<string, string> environment)
         {
             // Set environment
@@ -130,6 +127,9 @@ namespace Pty.Net.Linux
                 Environment.Exit(-1);
             }
         }
+
+        [DllImport(LibSystem, SetLastError = true)]
+        private static extern int setenv(string name, string value, int overwrite);
 
         // int int execvpe(const char *file, char *const argv[],char *const envp[]);
         [DllImport(LibSystem, SetLastError = true)]

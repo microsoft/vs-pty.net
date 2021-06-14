@@ -35,17 +35,20 @@ Function Get-SymbolFiles {
             $BinaryImagePath = $exePath
         }
 
+        # Add binaries to returned list
         Write-Output $BinaryImagePath
 
-        # Convert the PDB to legacy Windows PDBs
-        Write-Host "Converting PDB for $_" -ForegroundColor DarkGray
         $WindowsPdbDir = "$($_.Directory.FullName)\$WindowsPdbSubDirName"
-        if (!(Test-Path $WindowsPdbDir)) { mkdir $WindowsPdbDir | Out-Null }
-        & "$PSScriptRoot\..\Convert-PDB.ps1" -DllPath $BinaryImagePath -PdbPath $_ -OutputPath "$WindowsPdbDir\$($_.BaseName).pdb"
-        if ($LASTEXITCODE -ne 0) {
-            Write-Warning "PDB conversion of `"$_`" failed."
+        if (!(Test-Path $WindowsPdbDir)) 
+        { 
+            mkdir $WindowsPdbDir | Out-Null 
         }
 
+        # Move PDB files to symweb folder for symbol archival
+        Write-Host "Copying $_ to `"$WindowsPdbDir\$($_.BaseName).pdb`"" -ForegroundColor DarkGray
+        Copy-Item $_ -Destination "$WindowsPdbDir\$($_.BaseName).pdb" -Force
+
+        # Add PDB files to list of files that require archival
         Write-Output "$WindowsPdbDir\$($_.BaseName).pdb"
     }
 }
