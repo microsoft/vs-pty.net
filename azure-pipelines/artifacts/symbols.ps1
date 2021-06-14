@@ -35,10 +35,8 @@ Function Get-SymbolFiles {
             $BinaryImagePath = $exePath
         }
 
+        # Add binaries to returned list
         Write-Output $BinaryImagePath
-
-        # Move PDB files to PDB output folder for symbol archival
-        Write-Host "Preparing $_ for symbol archival" -ForegroundColor DarkGray
 
         $WindowsPdbDir = "$($_.Directory.FullName)\$WindowsPdbSubDirName"
         if (!(Test-Path $WindowsPdbDir)) 
@@ -46,8 +44,12 @@ Function Get-SymbolFiles {
             mkdir $WindowsPdbDir | Out-Null 
         }
 
+        # Move PDB files to symweb folder for symbol archival
         Write-Host "Copying $_ to `"$WindowsPdbDir\$($_.BaseName).pdb`"" -ForegroundColor DarkGray
         Copy-Item $_ -Destination "$WindowsPdbDir\$($_.BaseName).pdb" -Force
+
+        # Add PDB files to list of files that require archival
+        Write-Output "$WindowsPdbDir\$($_.BaseName).pdb"
     }
 }
 
