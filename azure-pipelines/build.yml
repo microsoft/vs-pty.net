@@ -1,9 +1,6 @@
-parameters:
-  windowsPool: Hosted Windows 2019 with VS2019
-
 jobs:
 - job: Windows
-  pool: ${{ parameters.windowsPool }}
+  pool: VSEngSS-MicroBuild2019
   steps:
   - checkout: self
     submodules: recursive
