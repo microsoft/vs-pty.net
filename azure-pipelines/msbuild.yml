@@ -1,6 +1,6 @@
 steps:
 - task: VSBuild@1
-  displayName: Build Visual Studio solution
+  displayName: Build Pty.Net solution
   inputs:
     solution: 'src\**\*.sln'
     msbuildArgs: /t:build,pack /m /bl:"$(Build.ArtifactStagingDirectory)/build_logs/msbuild.binlog"
