@@ -1,6 +1,6 @@
 jobs:
 - job: Windows
-  pool: VSEngSS-MicroBuild2019
+  pool: VSEngSS-MicroBuild2019-1ES
   steps:
   - checkout: self
     submodules: recursive
