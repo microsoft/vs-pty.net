@@ -39,7 +39,7 @@ stages:
   condition: and(succeeded(), eq(variables['SignType'], 'Real'))
   jobs:
   - job: archive
-    pool: VSEng-ReleasePool
+    pool: VSEngSS-MicroBuild2019-1ES
     variables:
       SymbolsFeatureName: Pty.Net
     steps:
