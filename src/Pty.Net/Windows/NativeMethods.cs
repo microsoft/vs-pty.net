@@ -78,37 +78,43 @@ namespace Pty.Net.Windows
 
         internal static int CreatePseudoConsole(Coord coord, IntPtr input, IntPtr output, uint flags, out IntPtr consoleHandle)
         {
-            if (Environment.Is64BitOperatingSystem)
+            switch (RuntimeInformation.ProcessArchitecture)
             {
-                return CreatePseudoConsole64(coord, input, output, flags, out consoleHandle);
-            }
-            else
-            {
-                return CreatePseudoConsole86(coord, input, output, flags, out consoleHandle);
+                case Architecture.Arm64:
+                    return CreatePseudoConsoleArm64(coord, input, output, flags, out consoleHandle);
+                case Architecture.X64:
+                    return CreatePseudoConsole64(coord, input, output, flags, out consoleHandle);
+                default:
+                    return CreatePseudoConsole86(coord, input, output, flags, out consoleHandle);
             }
         }
 
         internal static int ResizePseudoConsole(SafePseudoConsoleHandle consoleHandle, Coord coord)
         {
-            if (Environment.Is64BitOperatingSystem)
+            switch (RuntimeInformation.ProcessArchitecture)
             {
-                return ResizePseudoConsole64(consoleHandle, coord);
-            }
-            else
-            {
-                return ResizePseudoConsole86(consoleHandle, coord);
+                case Architecture.Arm64:
+                    return ResizePseudoConsoleArm64(consoleHandle, coord);
+                case Architecture.X64:
+                    return ResizePseudoConsole64(consoleHandle, coord);
+                default:
+                    return ResizePseudoConsole86(consoleHandle, coord);
             }
         }
 
         internal static void ClosePseudoConsole(IntPtr consoleHandle)
         {
-            if (Environment.Is64BitOperatingSystem)
+            switch (RuntimeInformation.ProcessArchitecture)
             {
-                ClosePseudoConsole64(consoleHandle);
-            }
-            else
-            {
-                ClosePseudoConsole86(consoleHandle);
+                case Architecture.Arm64:
+                    ClosePseudoConsoleArm64(consoleHandle);
+                    break;
+                case Architecture.X64:
+                    ClosePseudoConsole64(consoleHandle);
+                    break;
+                default:
+                    ClosePseudoConsole86(consoleHandle);
+                    break;
             }
         }
 
@@ -126,6 +132,17 @@ namespace Pty.Net.Windows
 
         [DllImport("kernel32.dll")]
         internal static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string procName);
+
+        [DllImport("arm64\\conpty.dll", EntryPoint = "CreatePseudoConsole")]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
+        private static extern int CreatePseudoConsoleArm64(Coord coord, IntPtr input, IntPtr output, uint flags, out IntPtr consoleHandle);
+
+        [DllImport("arm64\\conpty.dll", EntryPoint = "ResizePseudoConsole")]
+        private static extern int ResizePseudoConsoleArm64(SafePseudoConsoleHandle consoleHandle, Coord coord);
+
+        [DllImport("arm64\\conpty.dll", EntryPoint = "ClosePseudoConsole")]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        private static extern void ClosePseudoConsoleArm64(IntPtr consoleHandle);
 
         [DllImport("os64\\conpty.dll", EntryPoint = "CreatePseudoConsole")]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]

@@ -37,6 +37,7 @@
         <PackagePath>build\</PackagePath>
       </None>
 
+      <!-- x86 version of ConPty and OpenConsole -->
       <None Include="$(RepoRootPath)\bin\conpty\x86\conpty.dll">
         <Pack>true</Pack>
         <PackagePath>build\x86\os86</PackagePath>
@@ -54,6 +55,7 @@
         <PackagePath>build\x86\os64</PackagePath>
       </None>
 
+      <!-- x64 version of ConPty and OpenConsole -->
       <None Include="$(RepoRootPath)\bin\conpty\x64\conpty.dll">
         <Pack>true</Pack>
         <PackagePath>build\x64\os86</PackagePath>
@@ -69,6 +71,16 @@
       <None Include="$(RepoRootPath)\bin\conpty\x64\OpenConsole.exe">
         <Pack>true</Pack>
         <PackagePath>build\x64\os64</PackagePath>
+      </None>
+
+      <!-- Arm64 version of ConPty and OpenConsole -->
+      <None Include="$(RepoRootPath)\bin\conpty\Arm64\conpty.dll">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\arm64</PackagePath>
+      </None>
+      <None Include="$(RepoRootPath)\bin\conpty\Arm64\OpenConsole.exe">
+        <Pack>true</Pack>
+        <PackagePath>build\x64\arm64</PackagePath>
       </None>
     </ItemGroup>
   </Target>
