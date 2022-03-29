@@ -10,8 +10,5 @@ steps:
 - script: echo $PATH
   displayName: Print PATH
 
-- script: dep/winpty/vcbuild.bat --msvc-platform Win32 --toolset v142 --gyp-msvs-version 2017
-  displayName: Build x86 winpty
-
 - script: dep/winpty/vcbuild.bat --msvc-platform x64 --toolset v142 --gyp-msvs-version 2017
   displayName: Build x64 winpty
