@@ -12,5 +12,5 @@ steps:
   inputs:
     solution: 'dep/terminal/OpenConsole.sln'
     msbuildArgs: /t:Conhost\winconpty_DLL;Conhost\Host_EXE
-    platform: 'rm64'
+    platform: 'Arm64'
     configuration: '$(BuildConfiguration)'
