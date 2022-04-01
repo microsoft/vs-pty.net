@@ -5,15 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
+    <!--<None Include="$(WinptyReleasePath)\x64\*.dll;$(WinptyReleasePath)\x64\*.exe">
       <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </None>-->
 
     <None Include="$(OpenConsoleReleasePath)\x64\Release\*.dll;$(OpenConsoleReleasePath)\x64\Release\*.exe">
       <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <LinkBase>os64\</LinkBase>
+    </None>
+
+    <None Include="$(OpenConsoleReleasePath)\Arm64\Release\*.dll;$(OpenConsoleReleasePath)\Arm64\Release\*.exe">
+      <Visible>false</Visible>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LinkBase>arm64\</LinkBase>
     </None>
 
     <None Include="Pty.Net.targets">
@@ -30,7 +36,7 @@
 
   <Target Name="CollectNugetFiles" BeforeTargets="_GetPackageFiles">
     <ItemGroup>
-      <OutputPtyFiles Include="$(RepoRootPath)\bin\winpty\**\*" />
+      <!--<OutputPtyFiles Include="$(RepoRootPath)\bin\winpty\**\*" />-->
       
       <None Include="@(OutputPtyFiles)">
         <Pack>true</Pack>

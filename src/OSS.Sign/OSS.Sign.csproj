@@ -24,7 +24,7 @@
         <PackagePath>x64</PackagePath>
       </OpenConsoleFiles>
     </ItemGroup>
-    <ItemGroup>
+    <!--<ItemGroup>
       <WinPtyFiles Include="$(WinptyReleasePath)\Win32\winpty.dll" Condition="Exists($(WinptyReleasePath))">
         <PackagePath>x86</PackagePath>
       </WinPtyFiles>
@@ -37,8 +37,8 @@
       <WinPtyFiles Include="$(WinptyReleasePath)\x64\winpty-agent.exe" Condition="Exists($(WinptyReleasePath))">
         <PackagePath>x64</PackagePath>
       </WinPtyFiles>
-    </ItemGroup>
-    <Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(OutputPath)\winpty\%(WinPtyFiles.PackagePath)" />
+    </ItemGroup>-->
+    <!--<Copy SourceFiles="@(WinPtyFiles)" DestinationFolder="$(OutputPath)\winpty\%(WinPtyFiles.PackagePath)" />-->
     <Copy SourceFiles="@(OpenConsoleFiles)" DestinationFolder="$(OutputPath)\conpty\%(OpenConsoleFiles.PackagePath)" />
   </Target>
 
@@ -58,10 +58,10 @@
 
   <Target Name="CopySignedFiles" AfterTargets="Build">
     <ItemGroup>
-      <SignedWinPty Include="$(OutputPath)\winpty\**\*" />
+      <!--<SignedWinPty Include="$(OutputPath)\winpty\**\*" />-->
       <SignedOpenConsole Include="$(OutputPath)\conpty\**\*" />
     </ItemGroup>
-    <Copy SourceFiles="@(SignedWinPty)" DestinationFolder="$(RepoRootPath)\bin\winpty\%(SignedWinPty.RecursiveDir)" />
+    <!--<Copy SourceFiles="@(SignedWinPty)" DestinationFolder="$(RepoRootPath)\bin\winpty\%(SignedWinPty.RecursiveDir)" />-->
     <Copy SourceFiles="@(SignedOpenConsole)" DestinationFolder="$(RepoRootPath)\bin\conpty\%(SignedOpenConsole.RecursiveDir)" />
   </Target>
 </Project>
