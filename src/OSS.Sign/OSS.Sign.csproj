@@ -11,12 +11,12 @@
 
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <ItemGroup>
-      <!--<OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
+      <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
         <PackagePath>x86</PackagePath>
       </OpenConsoleFiles>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)\Win32\Release\OpenConsole.exe" Condition="Exists($(OpenConsoleReleasePath))">
         <PackagePath>x86</PackagePath>
-      </OpenConsoleFiles>-->
+      </OpenConsoleFiles>
       <OpenConsoleFiles Include="$(OpenConsoleReleasePath)x64\Release\conpty.dll" Condition="Exists($(OpenConsoleReleasePath))">
         <PackagePath>x64</PackagePath>
       </OpenConsoleFiles>
