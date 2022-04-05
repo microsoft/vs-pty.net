@@ -10,6 +10,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>-->
 
+    <None Include="$(OpenConsoleReleasePath)\x86\Release\*.dll;$(OpenConsoleReleasePath)\x86\Release\*.exe">
+      <Visible>false</Visible>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LinkBase>os86\</LinkBase>
+    </None>
+    
     <None Include="$(OpenConsoleReleasePath)\x64\Release\*.dll;$(OpenConsoleReleasePath)\x64\Release\*.exe">
       <Visible>false</Visible>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -38,10 +44,10 @@
     <ItemGroup>
       <!--<OutputPtyFiles Include="$(RepoRootPath)\bin\winpty\**\*" />-->
       
-      <None Include="@(OutputPtyFiles)">
+      <!-- <None Include="@(OutputPtyFiles)">
         <Pack>true</Pack>
         <PackagePath>build\</PackagePath>
-      </None>
+      </None> -->
 
       <!-- x86 version of ConPty and OpenConsole -->
       <None Include="$(RepoRootPath)\bin\conpty\x86\conpty.dll">
@@ -82,11 +88,11 @@
       <!-- Arm64 version of ConPty and OpenConsole -->
       <None Include="$(RepoRootPath)\bin\conpty\Arm64\conpty.dll">
         <Pack>true</Pack>
-        <PackagePath>build\x64\arm64</PackagePath>
+        <PackagePath>build\arm64</PackagePath>
       </None>
       <None Include="$(RepoRootPath)\bin\conpty\Arm64\OpenConsole.exe">
         <Pack>true</Pack>
-        <PackagePath>build\x64\arm64</PackagePath>
+        <PackagePath>build\arm64</PackagePath>
       </None>
     </ItemGroup>
   </Target>

@@ -1,7 +1,16 @@
 ﻿<Project>
   <ItemGroup>
-    <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' != 'AnyCPU'" 
-                 Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\**\*" />
+    <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' == 'x64'">
+      <Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\os86\*" />
+      <Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\os64\*" />
+    </ConPtyFiles>
+    <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' == 'x86'">
+      <Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\os86\*" />
+      <Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\os64\*" />
+    </ConPtyFiles>
+    <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' == 'arm64'">
+      <Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\Arm64\*" />
+    </ConPtyFiles>
   </ItemGroup>
   
   <Target Name="CopyPtyNativeFiles">
