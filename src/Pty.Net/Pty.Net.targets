@@ -9,7 +9,7 @@
       <None Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\os64\*" />
     </ConPtyFiles>
     <ConPtyFiles Condition="'$(PlatformTarget)' != '' And '$(PlatformTarget)' == 'arm64'">
-      <None Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\Arm64\*" />
+      <None Include="$(MSBuildThisFileDirectory)\$(PlatformTarget)\*" />
     </ConPtyFiles>
   </ItemGroup>
   
