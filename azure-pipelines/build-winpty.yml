@@ -1,17 +1,8 @@
 steps:
-# - task: UsePythonVersion@0 
-#   inputs:
-#     versionSpec: 3.6
-#     addToPath: true
-#     architecture: x64
-
 - powershell: azure-pipelines/Set-MSBuildPath.ps1
 
 - script: echo $PATH
   displayName: Print PATH
 
-- script: dep/winpty/vcbuild.bat --msvc-platform Win32 --toolset v142 --gyp-msvs-version 2017
-  displayName: Build x86 winpty
-
 - script: dep/winpty/vcbuild.bat --msvc-platform x64 --toolset v142 --gyp-msvs-version 2017
-  displayName: Build x64 winpty
+  displayName: Build x64 WinPty

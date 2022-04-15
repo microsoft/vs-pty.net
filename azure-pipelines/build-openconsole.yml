@@ -1,6 +1,6 @@
 steps:
 - task: VSBuild@1
-  displayName: 'Build OpenConsole'
+  displayName: 'Build OpenConsole x86'
   inputs:
     solution: 'dep/terminal/OpenConsole.sln'
     msbuildArgs: /t:Conhost\winconpty_DLL;Conhost\Host_EXE
@@ -8,9 +8,16 @@ steps:
     configuration: '$(BuildConfiguration)'
 
 - task: VSBuild@1
-  displayName: 'Build OpenConsole'
+  displayName: 'Build OpenConsole x64'
   inputs:
     solution: 'dep/terminal/OpenConsole.sln'
     msbuildArgs: /t:Conhost\winconpty_DLL;Conhost\Host_EXE
     platform: 'x64'
+    configuration: '$(BuildConfiguration)'
+- task: VSBuild@1
+  displayName: 'Build OpenConsole Arm64'
+  inputs:
+    solution: 'dep/terminal/OpenConsole.sln'
+    msbuildArgs: /t:Conhost\winconpty_DLL;Conhost\Host_EXE
+    platform: 'Arm64'
     configuration: '$(BuildConfiguration)'
